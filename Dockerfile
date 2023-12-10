@@ -21,8 +21,6 @@ RUN apt-get update \
 
 RUN docker-php-ext-install soap
 
-# COPY composer.json .
-
-# RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename=composer \
-#     && chmod +x /usr/bin/composer \
-#     && composer install
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename=composer \
+    && chmod +x /usr/bin/composer \
+# RUN composer install
