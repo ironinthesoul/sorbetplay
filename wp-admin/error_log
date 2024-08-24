@@ -1,0 +1,10 @@
+[24-Aug-2024 15:32:59 UTC] PHP Warning:  require(/home/wgcv5t3908h8/public_html/wp-includes/class-wp-token-map.php): Failed to open stream: No such file or directory in /home/wgcv5t3908h8/public_html/wp-settings.php on line 110
+[24-Aug-2024 15:32:59 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/wgcv5t3908h8/public_html/wp-includes/class-wp-token-map.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/wgcv5t3908h8/public_html/wp-settings.php:110
+Stack trace:
+#0 /home/wgcv5t3908h8/public_html/wp-config.php(65): require_once()
+#1 /home/wgcv5t3908h8/public_html/wp-load.php(50): require_once('/home/wgcv5t390...')
+#2 /home/wgcv5t3908h8/public_html/wp-admin/admin-ajax.php(22): require_once('/home/wgcv5t390...')
+#3 {main}
+  thrown in /home/wgcv5t3908h8/public_html/wp-settings.php on line 110
+[24-Aug-2024 15:54:47 UTC] PHP Warning:  Undefined array key "container-on" in /home/wgcv5t3908h8/public_html/wp-content/plugins/duracelltomi-google-tag-manager/admin/admin.php on line 659
+[24-Aug-2024 15:54:47 UTC] PHP Warning:  Undefined array key "compat-mode" in /home/wgcv5t3908h8/public_html/wp-content/plugins/duracelltomi-google-tag-manager/admin/admin.php on line 660
