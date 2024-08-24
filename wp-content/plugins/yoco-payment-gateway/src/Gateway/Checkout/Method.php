@@ -22,6 +22,7 @@ class Method {
 
 		if ( $title !== $order->get_payment_method_title() ) {
 			$order->set_payment_method_title( $title );
+			$order->set_created_via( 'checkout' );
 			$order->save();
 		}
 	}
@@ -35,6 +36,7 @@ class Method {
 
 		if ( $title !== $order->get_payment_method_title() ) {
 			$order->set_payment_method_title( $title );
+			$order->set_created_via( 'checkout' );
 			$order->save();
 		}
 	}

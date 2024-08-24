@@ -176,7 +176,7 @@
 			else
 				$( '#cn_on_scroll_offset' ).slideUp( 'fast' );
 		} );
-		
+
 		// conditional display option
 		$( '#cn_conditional_display_opt' ).on( 'change', function() {
 			if ( $( this ).is( ':checked' ) )
@@ -263,6 +263,9 @@
 
 				try {
 					var response = $.parseJSON( data );
+
+					// remove potential optgroups
+					select.find( 'optgroup' ).remove();
 
 					// replace old select options with new ones
 					select.fadeIn( 'fast' ).find( 'option' ).remove().end().append( response.select );

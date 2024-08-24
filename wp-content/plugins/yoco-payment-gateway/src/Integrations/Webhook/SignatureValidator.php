@@ -20,7 +20,7 @@ class SignatureValidator extends WebhookSignatureValidator {
 
 			return true;
 		} catch ( \Throwable $th ) {
-			yoco( Logger::class )->logError( sprintf( __( 'Failed to verify webhook signature. %s', 'yoco_wc_payment_gateway' ), $th->getMessage() ) );
+			yoco( Logger::class )->logError( sprintf( 'Failed to verify webhook signature. %s', $th->getMessage() ) );
 			return false;
 		}
 	}
@@ -29,7 +29,7 @@ class SignatureValidator extends WebhookSignatureValidator {
 		$settings = get_option( 'woocommerce_class_yoco_wc_payment_gateway_settings', null );
 
 		if ( ! isset( $settings['mode'] ) ) {
-			yoco( Logger::class )->logError( __( 'Invalid yoco gateway settings. Missing mode.', 'yoco_wc_payment_gateway' ) );
+			yoco( Logger::class )->logError( 'Invalid yoco gateway settings. Missing mode.' );
 			return '';
 		}
 
@@ -39,7 +39,7 @@ class SignatureValidator extends WebhookSignatureValidator {
 		$installation = yoco( InstallationsManager::class );
 
 		if ( ! $installation->hasWebhookSecret( $settings['mode'] ) ) {
-			yoco( Logger::class )->logError( __( 'Failed to verify signature. Webhook secret is empty.', 'yoco_wc_payment_gateway' ) );
+			yoco( Logger::class )->logError( 'Failed to verify signature. Webhook secret is empty.' );
 		}
 
 		return $installation->getWebhookSecret( $settings['mode'] );

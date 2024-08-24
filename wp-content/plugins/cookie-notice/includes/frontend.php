@@ -10,15 +10,30 @@ if ( ! defined( 'ABSPATH' ) )
  */
 class Cookie_Notice_Frontend {
 
+	private $compliance = false;
+
 	/**
 	 * Class constructor.
 	 *
 	 * @return void
 	 */
 	public function __construct() {
-		// actions
+		// general actions
 		add_action( 'init', [ $this, 'early_init' ], 9 );
 		add_action( 'wp', [ $this, 'init' ] );
+		add_action( 'wp_head', [ $this, 'wp_print_header_scripts' ] );
+		add_action( 'wp_print_footer_scripts', [ $this, 'wp_print_footer_scripts' ] );
+
+		// compliance actions
+		add_action( 'wp_head', [ $this, 'add_dns_prefetch' ], -1 );
+		add_action( 'wp_head', [ $this, 'add_cookie_compliance' ], 0 );
+
+		// notice actions
+		add_action( 'wp_footer', [ $this, 'add_cookie_notice' ], 1000 );
+		add_action( 'wp_enqueue_scripts', [ $this, 'wp_enqueue_notice_scripts' ] );
+
+		// filters
+		add_filter( 'body_class', [ $this, 'change_body_class' ] );
 	}
 
 	/**
@@ -30,23 +45,22 @@ class Cookie_Notice_Frontend {
 		// get main instance
 		$cn = Cookie_Notice();
 
+		// set compliance status
+		$this->compliance = (bool) ( $cn->get_status() === 'active' );
+
 		// cookie compliance initialization
-		if ( $cn->get_status() === 'active' ) {
-			// amp 2.0.0+ compatibility
+		if ( $this->compliance ) {
+			// amp compatibility
 			if ( $cn->options['general']['amp_support'] && cn_is_plugin_active( 'amp' ) )
 				include_once( COOKIE_NOTICE_PATH . 'includes/modules/amp/amp.php' );
 
 			// is caching compatibility active?
 			if ( $cn->options['general']['caching_compatibility'] ) {
-				// litespeed cache 3.0.0+ compatibility
+				// litespeed cache compatibility
 				if ( cn_is_plugin_active( 'litespeed' ) )
 					include_once( COOKIE_NOTICE_PATH . 'includes/modules/litespeed-cache/litespeed-cache.php' );
 
-				// sg optimizer 5.5.0+ compatibility
-				if ( cn_is_plugin_active( 'sgoptimizer' ) )
-					include_once( COOKIE_NOTICE_PATH . 'includes/modules/sg-optimizer/sg-optimizer.php' );
-
-				// wp rocket 3.8.0+ compatibility
+				// wp rocket compatibility
 				if ( cn_is_plugin_active( 'wprocket' ) )
 					include_once( COOKIE_NOTICE_PATH . 'includes/modules/wp-rocket/wp-rocket.php' );
 			}
@@ -69,36 +83,20 @@ class Cookie_Notice_Frontend {
 		// get main instance
 		$cn = Cookie_Notice();
 
-		// is banner allowed to display?
-		if ( $this->maybe_display_banner() ) {
-			// cookie compliance initialization
-			if ( $cn->get_status() === 'active' ) {
-				add_action( 'wp_head', [ $this, 'add_cookie_compliance' ], 0 );
+		// compatibility fixes
+		if ( $this->compliance ) {
+			// is caching compatibility active?
+			if ( $cn->options['general']['caching_compatibility'] ) {
+				// autoptimize compatibility
+				if ( cn_is_plugin_active( 'autoptimize' ) )
+					include_once( COOKIE_NOTICE_PATH . 'includes/modules/autoptimize/autoptimize.php' );
+			}
 
-				// is caching compatibility active?
-				if ( $cn->options['general']['caching_compatibility'] ) {
-					// autoptimize 2.4.0+
-					if ( cn_is_plugin_active( 'autoptimize' ) )
-						include_once( COOKIE_NOTICE_PATH . 'includes/modules/autoptimize/autoptimize.php' );
-				}
-
-				// is blocking active?
-				if ( $cn->options['general']['app_blocking'] ) {
-					// contact form 7 5.1.0+ recaptcha v3 compatibility
-					if ( cn_is_plugin_active( 'contactform7' ) )
-						include_once( COOKIE_NOTICE_PATH . 'includes/modules/contact-form-7/contact-form-7.php' );
-				}
-			// cookie notice initialization
-			} else {
-				// actions
-				add_action( 'wp_enqueue_scripts', [ $this, 'wp_enqueue_notice_scripts' ] );
-				add_action( 'wp_head', [ $this, 'wp_print_header_scripts' ] );
-				add_action( 'wp_print_footer_scripts', [ $this, 'wp_print_footer_scripts' ] );
-				add_action( 'wp_footer', [ $this, 'add_cookie_notice' ], 1000 );
-
-				// filters
-				add_filter( 'script_loader_tag', [ $this, 'wp_enqueue_script_async' ], 10, 3 );
-				add_filter( 'body_class', [ $this, 'change_body_class' ] );
+			// is blocking active?
+			if ( $cn->options['general']['app_blocking'] ) {
+				// contact form 7 compatibility
+				if ( cn_is_plugin_active( 'contactform7' ) )
+					include_once( COOKIE_NOTICE_PATH . 'includes/modules/contact-form-7/contact-form-7.php' );
 			}
 		}
 	}
@@ -106,15 +104,25 @@ class Cookie_Notice_Frontend {
 	/**
 	 * Whether banner is allowed to display.
 	 *
+	 * @param array $args
 	 * @return bool
 	 */
-	public function maybe_display_banner() {
+	public function maybe_display_banner( $args = [] ) {
+		$defaults = [
+			'skip_amp' => false
+		];
+
+		if ( is_array( $args ) )
+			$args = wp_parse_args( $args, $defaults );
+		else
+			$args = $defaults;
+
 		// get main instance
 		$cn = Cookie_Notice();
 
 		// is cookie compliance active?
-		if ( $cn->get_status() === 'active' ) {
-			// elementor 1.3.0+ compatibility, needed early for is_preview_mode
+		if ( $this->compliance ) {
+			// elementor compatibility, needed early for is_preview_mode
 			if ( cn_is_plugin_active( 'elementor' ) )
 				include_once( COOKIE_NOTICE_PATH . 'includes/modules/elementor/elementor.php' );
 		}
@@ -123,9 +131,15 @@ class Cookie_Notice_Frontend {
 		if ( $this->is_preview_mode() )
 			return false;
 
-		// is it a bot?
-		if ( $cn->bot_detect->is_crawler() )
+		// is bot detection enabled and it's a bot?
+		if ( $cn->options['general']['bot_detection'] && $cn->bot_detect->is_crawler() )
 			return false;
+
+		// check amp
+		if ( ! $args['skip_amp'] ) {
+			if ( $cn->options['general']['amp_support'] && cn_is_plugin_active( 'amp' ) && function_exists( 'amp_is_request' ) && amp_is_request() )
+				return false;
+		}
 
 		// final check for conditional display
 		return $this->check_conditions();
@@ -179,7 +193,7 @@ class Cookie_Notice_Frontend {
 							break;
 
 						case 'page':
-							if ( ( $rule['operator'] === 'equal' && ! empty( $object ) && is_page( $object->ID ) && (int) $object->ID === (int) $rule['value'] ) || ( $rule['operator'] === 'not_equal' && ( empty( $object ) || ! is_page() || ( is_page() && ! empty( $object ) && $object->ID !== (int) $rule['value'] ) ) ) )
+							if ( ( $rule['operator'] === 'equal' && ! empty( $object ) && is_a( $object, 'WP_Post' ) && property_exists( $object, 'ID' ) && is_page( $object->ID ) && (int) $object->ID === (int) $rule['value'] ) || ( $rule['operator'] === 'not_equal' && ( empty( $object ) || ! is_page() || ( is_page() && ! empty( $object ) && is_a( $object, 'WP_Post' ) && property_exists( $object, 'ID' ) && $object->ID !== (int) $rule['value'] ) ) ) )
 								$give_rule_access = true;
 							break;
 
@@ -196,6 +210,26 @@ class Cookie_Notice_Frontend {
 						case 'user_type':
 							if ( ( $rule['operator'] === 'equal' && $rule['value'] === 'logged_in' && is_user_logged_in() ) || ( $rule['operator'] === 'equal' && $rule['value'] === 'guest' && ! is_user_logged_in() ) || ( $rule['operator'] === 'not_equal' && $rule['value'] === 'logged_in' && ! is_user_logged_in() ) || ( $rule['operator'] === 'not_equal' && $rule['value'] === 'guest' && is_user_logged_in() ) )
 								$give_rule_access = true;
+							break;
+
+						case 'taxonomy_archive':
+							// check value
+							if ( strpos( $rule['value'], '|' ) !== false ) {
+								// explode it
+								$values = explode( '|', $rule['value'] );
+
+								// 2 chunks?
+								if ( count( $values ) === 2 ) {
+									$term_id = (int) $values[0];
+
+									if ( $values[1] === 'category' && ( ( $rule['operator'] === 'equal' && is_category( $term_id ) ) || ( $rule['operator'] === 'not_equal' && ! is_category( $term_id ) ) ) )
+										$give_rule_access = true;
+									elseif ( $values[1] === 'post_tag' && ( ( $rule['operator'] === 'equal' && is_tag( $term_id ) ) || ( $rule['operator'] === 'not_equal' && ! is_tag( $term_id ) ) ) )
+										$give_rule_access = true;
+									elseif ( ( $rule['operator'] === 'equal' && is_tax( $values[1], $term_id ) ) || ( $rule['operator'] === 'not_equal' && ! is_tax( $values[1], $term_id ) ) )
+										$give_rule_access = true;
+								}
+							}
 							break;
 					}
 
@@ -238,8 +272,8 @@ class Cookie_Notice_Frontend {
 		$locale_code = explode( '_', $locale );
 
 		// exceptions, norwegian
-		if ( in_array( $locale_code, [ 'nb', 'nn' ] ) )
-			$locale_code = 'no';
+		if ( is_array( $locale_code ) && in_array( $locale_code[0], [ 'nb', 'nn' ] ) )
+			$locale_code[0] = 'no';
 
 		$options = apply_filters(
 			'cn_cookie_compliance_args',
@@ -274,11 +308,24 @@ class Cookie_Notice_Frontend {
 			else
 				$blocking = get_option( 'cookie_notice_app_blocking' );
 
-			$providers = ! empty( $blocking[ 'providers'] ) && is_array( $blocking[ 'providers'] ) ? $this->get_custom_items( $blocking[ 'providers'] ) : [];
-			$patterns = ! empty( $blocking[ 'patterns'] ) && is_array( $blocking[ 'patterns'] ) ? $this->get_custom_items( $blocking[ 'patterns' ] ) : [];
+			$providers = ! empty( $blocking['providers'] ) && is_array( $blocking['providers'] ) ? $this->get_custom_items( $blocking['providers'] ) : [];
+			$patterns = ! empty( $blocking['patterns'] ) && is_array( $blocking['patterns'] ) ? $this->get_custom_items( $blocking['patterns'] ) : [];
 
 			$options['customProviders'] = ! empty( $providers ) ? $providers : [];
 			$options['customPatterns'] = ! empty( $patterns ) ? $patterns : [];
+
+			// google consent mode default categories
+			$gcd = [];
+
+			if ( ! empty( $blocking['google_consent_default'] ) && is_array( $blocking['google_consent_default'] ) ) {
+				foreach ( $blocking['google_consent_default'] as $storage => $category ) {
+					if ( (int) $category === 1 )
+						$gcd[$storage] = 'granted';
+				}
+			}
+
+			if ( ! empty( $gcd ) )
+				$options['googleConsentDefault'] = $gcd;
 		}
 
 		return $options;
@@ -294,9 +341,25 @@ class Cookie_Notice_Frontend {
 		$output = '
 		<!-- Cookie Compliance -->
 		<script type="text/javascript">var huOptions = ' . wp_json_encode( $options ) . ';</script>
-		<script type="text/javascript" src="' . esc_url( Cookie_Notice()->get_url( 'widget' ) ) . '"></script>';
+		<script type="text/javascript" src="' . esc_url( ( is_ssl() ? 'https:' : 'http:' ) . Cookie_Notice()->get_url( 'widget' ) ) . '"></script>';
 
 		return apply_filters( 'cn_cookie_compliance_output', $output, $options );
+	}
+
+	/**
+	 * Add DNS Prefetch.
+	 *
+	 * @return void
+	 */
+	public function add_dns_prefetch() {
+		if ( ! $this->compliance )
+			return;
+
+		// is banner allowed to display?
+		if ( ! $this->maybe_display_banner() )
+			return;
+
+		echo '<link rel="dns-prefetch" href="//cdn.hu-manity.co" />';
 	}
 
 	/**
@@ -305,6 +368,13 @@ class Cookie_Notice_Frontend {
 	 * @return void
 	 */
 	public function add_cookie_compliance() {
+		if ( ! $this->compliance )
+			return;
+
+		// is banner allowed to display?
+		if ( ! $this->maybe_display_banner() )
+			return;
+
 		// get options
 		$options = $this->get_cc_options();
 
@@ -318,6 +388,13 @@ class Cookie_Notice_Frontend {
 	 * @return void
 	 */
 	public function add_cookie_notice() {
+		if ( $this->compliance )
+			return;
+
+		// is banner allowed to display?
+		if ( ! $this->maybe_display_banner() )
+			return;
+
 		// get main instance
 		$cn = Cookie_Notice();
 
@@ -468,15 +545,102 @@ class Cookie_Notice_Frontend {
 	}
 
 	/**
+	 * Add blocking class to scripts, iframes and links.
+	 *
+	 * @param string $type
+	 * @param string $code
+	 * @return string
+	 */
+	public function add_block_class( $type, $code ) {
+		// clear and disable libxml errors and allow user to fetch error information as needed
+		libxml_use_internal_errors( true );
+
+		// create new dom object
+		$document = new DOMDocument( '1.0', 'UTF-8' );
+
+		// set attributes
+		$document->formatOutput = true;
+		$document->preserveWhiteSpace = false;
+
+		// load code
+		$document->loadHTML( '<div>' . wp_kses( trim( $code ), Cookie_Notice()->get_allowed_html( $type ) ) . '</div>', LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD );
+
+		$container = $document->getElementsByTagName( 'div' )->item( 0 );
+		$container = $container->parentNode->removeChild( $container );
+
+		while ( $document->firstChild ) {
+			$document->removeChild( $document->firstChild );
+		}
+
+		while ( $container->firstChild ) {
+			$document->appendChild( $container->firstChild );
+		}
+
+		// set blocked tags
+		if ( $type === 'body' )
+			$blocked_tags = [ 'script', 'iframe' ];
+		elseif ( $type === 'head' )
+			$blocked_tags = [ 'script', 'link' ];
+
+		foreach ( $blocked_tags as $blocked_tag ) {
+			$tags = $document->getElementsByTagName( $blocked_tag );
+
+			// any tags?
+			if ( ! empty( $tags ) && is_object( $tags ) ) {
+				foreach ( $tags as $tag ) {
+					$tag->setAttribute( 'class', 'hu-block' );
+				}
+			}
+		}
+
+		// save new HTML
+		$output = $document->saveHTML();
+
+		// reenable libxml errors
+		libxml_use_internal_errors( false );
+
+		return $output;
+	}
+
+	/**
 	 * Load notice scripts and styles - frontend.
 	 *
 	 * @return void
 	 */
 	public function wp_enqueue_notice_scripts() {
+		if ( $this->compliance )
+			return;
+
+		// is banner allowed to display?
+		if ( ! $this->maybe_display_banner() )
+			return;
+
 		// get main instance
 		$cn = Cookie_Notice();
 
 		wp_enqueue_script( 'cookie-notice-front', COOKIE_NOTICE_URL . '/js/front' . ( ! ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '.min' : '' ) . '.js', [], $cn->defaults['version'], isset( $cn->options['general']['script_placement'] ) && $cn->options['general']['script_placement'] === 'footer' );
+
+		// not array? changeable by cn_cookie_expiry filter
+		if ( is_array( $cn->settings->times ) ) {
+			// check cookie expiration time
+			if ( array_key_exists( $cn->options['general']['time'], $cn->settings->times ) && array_key_exists( 1, $cn->settings->times[$cn->options['general']['time']] ) )
+				$cookie_time = (int) $cn->settings->times[$cn->options['general']['time']][1];
+			else {
+				// fallback to default length of month
+				$cookie_time = MONTH_IN_SECONDS;
+			}
+
+			// check cookie rejection expiration time
+			if ( array_key_exists( $cn->options['general']['time_rejected'], $cn->settings->times ) && array_key_exists( 1, $cn->settings->times[$cn->options['general']['time_rejected']] ) )
+				$cookie_time_rejected = (int) $cn->settings->times[$cn->options['general']['time_rejected']][1];
+			else {
+				// fallback to default length of month
+				$cookie_time_rejected = MONTH_IN_SECONDS;
+			}
+		} else {
+			// fallback to default length of month
+			$cookie_time = $cookie_time_rejected = MONTH_IN_SECONDS;
+		}
 
 		// prepare script data
 		$script_data = [
@@ -488,8 +652,8 @@ class Cookie_Notice_Frontend {
 			'onScrollOffset'		=> (int) $cn->options['general']['on_scroll_offset'],
 			'onClick'				=> $cn->options['general']['on_click'],
 			'cookieName'			=> 'cookie_notice_accepted',
-			'cookieTime'			=> $cn->settings->times[$cn->options['general']['time']][1],
-			'cookieTimeRejected'	=> $cn->settings->times[$cn->options['general']['time_rejected']][1],
+			'cookieTime'			=> $cookie_time,
+			'cookieTimeRejected'	=> $cookie_time_rejected,
 			'globalCookie'			=> is_multisite() && $cn->options['general']['global_cookie'] && is_subdomain_install(),
 			'redirection'			=> $cn->options['general']['redirection'],
 			'cache'					=> defined( 'WP_CACHE' ) && WP_CACHE,
@@ -503,21 +667,6 @@ class Cookie_Notice_Frontend {
 	}
 
 	/**
-	 * Make a JavaScript Asynchronous.
-	 *
-	 * @param string $tag The original enqueued script tag
-	 * @param string $handle The registered unique name of the script
-	 * @param string $src
-	 * @return string $tag
-	 */
-	public function wp_enqueue_script_async( $tag, $handle, $src ) {
-		if ( $handle === 'cookie-notice-front' )
-			$tag = str_replace( '<script', '<script async', $tag );
-
-		return $tag;
-	}
-
-	/**
 	 * Print non functional JavaScript in body.
 	 *
 	 * @return void
@@ -526,11 +675,11 @@ class Cookie_Notice_Frontend {
 		// get main instance
 		$cn = Cookie_Notice();
 
-		if ( $cn->cookies_accepted() ) {
+		if ( $cn->cookies_accepted() || $this->compliance ) {
 			$scripts = apply_filters( 'cn_refuse_code_scripts_html', $cn->options['general']['refuse_code'], 'body' );
 
 			if ( ! empty( $scripts ) )
-				echo html_entity_decode( wp_kses( $scripts, $cn->get_allowed_html() ) );
+				echo html_entity_decode( wp_kses( $scripts, $cn->get_allowed_html( 'body' ) ) );
 		}
 	}
 
@@ -543,11 +692,11 @@ class Cookie_Notice_Frontend {
 		// get main instance
 		$cn = Cookie_Notice();
 
-		if ( $cn->cookies_accepted() ) {
+		if ( $cn->cookies_accepted() || $this->compliance ) {
 			$scripts = apply_filters( 'cn_refuse_code_scripts_html', $cn->options['general']['refuse_code_head'], 'head' );
 
 			if ( ! empty( $scripts ) )
-				echo html_entity_decode( wp_kses( $scripts, $cn->get_allowed_html() ) );
+				echo html_entity_decode( wp_kses( $scripts, $cn->get_allowed_html( 'head' ) ) );
 		}
 	}
 
@@ -559,12 +708,12 @@ class Cookie_Notice_Frontend {
 	 */
 	public function get_custom_items( $items ) {
 		$result = [];
-		
+
 		if ( ! empty( $items ) && is_array( $items ) ) {
 			foreach ( $items as $index => $item ) {
 				if ( isset( $item->IsCustom ) && $item->IsCustom == true ) {
 					$sanitized_item = [];
-					
+
 					foreach ( $item as $key => $value ) {
 						$sanitized_item[$key] = $this->sanitize_field( $value, $key );
 					}
@@ -573,7 +722,7 @@ class Cookie_Notice_Frontend {
 				}
 			}
 		}
-		
+
 		return $result;
 	}
 

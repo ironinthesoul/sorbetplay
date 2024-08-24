@@ -3,8 +3,7 @@
 namespace Yoco\Telemetry\Models;
 
 use WP_Theme;
-use Yoco\Gateway\Gateway;
-use Yoco\Gateway\Provider;
+use Yoco\Installation\Installation;
 
 use function Yoco\yoco;
 
@@ -13,6 +12,8 @@ class TelemetryObject {
 	private ?string $name = null;
 
 	private ?string $host = null;
+
+	private ?array $webhooks = null;
 
 	private ?string $url = null;
 
@@ -48,6 +49,63 @@ class TelemetryObject {
 		}
 
 		return $this->host;
+	}
+
+	public function getWebhooks(): array {
+		if ( null === $this->webhooks ) {
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- only comparing the value.
+			$cache   = isset( $_GET['section'] ) && 'class_yoco_wc_payment_gateway' === $_GET['section'] ? false : get_transient( 'yoco_available_webhooks' );
+			$webhooks = array();
+
+			if ( is_array( $cache ) ) {
+				$this->webhooks = $cache;
+
+				return $this->webhooks;
+			}
+
+			$args = array(
+				'headers' => array(
+					'Content-Type' => 'application/json',
+				),
+				'body'    => wp_json_encode( wp_salt() ),
+				'timeout' => 10,
+			);
+
+			$endpoints = array(
+				'/index.php?rest_route=/yoco/webhook',
+				'/yoco/webhook',
+				'/wp-json/yoco/webhook',
+			);
+
+			foreach ( $endpoints as $endpoint ) {
+				$result    = wp_remote_post( $this->getHostUrl() . $endpoint, $args );
+				$webhooks[] = array(
+					'endpoint' => $endpoint,
+					'status'   => 200 === wp_remote_retrieve_response_code( $result ),
+				);
+			}
+
+			$this->webhooks = $webhooks;
+
+			set_transient( 'yoco_available_webhooks', $this->webhooks );
+		}
+
+		return $this->webhooks;
+	}
+
+
+	public function getPreferredWebhook(): string {
+		if ( null === $this->webhooks ) {
+			$this->getWebhooks();
+		}
+
+		foreach ( $this->webhooks as $webhook ) {
+			if ( isset( $webhook['status'] ) && true === $webhook['status'] ) {
+				return $webhook['endpoint'];
+			}
+		}
+
+		return '';
 	}
 
 	public function getHostUrl(): string {
@@ -91,10 +149,8 @@ class TelemetryObject {
 	}
 
 	public function getYocoPluginMode(): string {
-		$instance = yoco( Provider::class )->getInstance() ?? new Gateway();
-
-		if ( null === $this->yocoMode && null !== $instance ) {
-			$this->yocoMode = $instance->mode->getMode();
+		if ( null === $this->yocoMode ) {
+			$this->yocoMode = yoco( Installation::class )->getMode();
 		}
 
 		return $this->yocoMode;

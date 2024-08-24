@@ -3,27 +3,14 @@
 namespace Yoco\Helpers;
 
 use WC_Log_Levels;
-use Yoco\Gateway\Gateway;
-use Yoco\Gateway\Provider;
+use Yoco\Installation\Installation;
 use function Yoco\yoco;
 
 class Logger {
 
-	private ?Gateway $gateway = null;
-
 	private ?array $error_log_files = null;
 
 	private ?string $error_logs = null;
-
-	public function getGateway(): Gateway {
-		if ( null === $this->gateway ) {
-			$instance = yoco( Provider::class )->getInstance();
-
-			$this->gateway = $instance ?? new Gateway();
-		}
-
-		return $this->gateway;
-	}
 
 	public function logError( $message, array $context = array() ): void {
 		$this->log( WC_Log_Levels::ERROR, $message, $context );
@@ -39,8 +26,9 @@ class Logger {
 			if ( empty( $this->getErrorLogFiles() ) ) {
 				$this->error_logs = '';
 			} else {
+				// phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode
 				$this->error_logs = '-----BEGIN LOG DATA-----' . PHP_EOL . base64_encode(
-					content_url( str_replace( \WP_CONTENT_DIR, '', trailingslashit( \WC_LOG_DIR ) ) ) . PHP_EOL . PHP_EOL . array_reduce(
+					get_site_url() . '/index.php?rest_route=/yoco/logs&file=' . PHP_EOL . array_reduce(
 						$this->getErrorLogFiles(),
 						function ( $logs, $file_name ) {
 							$logs .= $file_name . PHP_EOL;
@@ -59,7 +47,7 @@ class Logger {
 			$this->error_log_files = array_filter(
 				\WC_Log_Handler_File::get_log_files(),
 				function( $file_name ) {
-					return false !== strpos( $file_name, 'yoco-gateway-' . WC_Log_Levels::ERROR ) ? true : false;
+					return false !== strpos( $file_name, 'yoco-gateway-' ) ? true : false;
 				}
 			);
 		}
@@ -68,7 +56,7 @@ class Logger {
 	}
 
 	private function isDebugLogEnabled(): bool {
-		return ( defined( 'YOCO_DEBUG_LOG' ) && true === YOCO_DEBUG_LOG ) || $this->getGateway()->debug->isEnabled();
+		return ( defined( 'YOCO_DEBUG_LOG' ) && true === YOCO_DEBUG_LOG ) || yoco( Installation::class )->isDebugEnabled();
 	}
 
 	private function log( string $level, $message, $context = array() ): void {
@@ -79,7 +67,7 @@ class Logger {
 		$context = wp_parse_args(
 			$context,
 			array(
-				'source' => 'yoco-gateway-v.' . YOCO_PLUGIN_VERSION . '-' . $level . '-' . $this->getGateway()->mode->getMode() . '_mode',
+				'source' => 'yoco-gateway-v' . YOCO_PLUGIN_VERSION . '-' . $level . '-' . yoco( Installation::class )->getMode() . '_mode',
 			)
 		);
 

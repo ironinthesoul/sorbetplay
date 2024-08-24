@@ -27,7 +27,7 @@ class OrdersRepository {
 		);
 
 		if ( empty( $orders ) ) {
-			yoco( Logger::class )->logInfo( sprintf( __( 'Order of checkout ID (%s) not found in the repository.', 'yoco_wc_payment_gateway' ), $sessionId ) );
+			yoco( Logger::class )->logError( sprintf( 'Order of checkout ID (%s) not found in the repository.', $sessionId ) );
 			return null;
 		}
 
@@ -46,7 +46,7 @@ class OrdersRepository {
 		);
 
 		if ( empty( $orders ) ) {
-			yoco( Logger::class )->logInfo( sprintf( __( 'Order of payment ID (%s) not found in the repository.', 'yoco_wc_payment_gateway' ), $paymentId ) );
+			yoco( Logger::class )->logError( sprintf( 'Order of payment ID (%s) not found in the repository.', $paymentId ) );
 			return null;
 		}
 
@@ -65,7 +65,7 @@ class OrdersRepository {
 		);
 
 		if ( empty( $orders ) ) {
-			yoco( Logger::class )->logInfo( sprintf( __( 'Order of refund ID (%s) not found in the repository.', 'yoco_wc_payment_gateway' ), $refundId ) );
+			yoco( Logger::class )->logError( sprintf( 'Order of refund ID (%s) not found in the repository.', $refundId ) );
 			return null;
 		}
 
@@ -78,15 +78,15 @@ class OrdersRepository {
 		$orders = wc_get_orders( $args );
 
 		if ( empty( $orders ) ) {
-			yoco( Logger::class )->logError( __( 'Order not found.', 'yoco_wc_payment_gateway' ) );
-			throw new Exception( __( 'Order not found.', 'yoco_wc_payment_gateway' ) );
+			yoco( Logger::class )->logError( 'Order not found.' );
+			throw new Exception( 'Order not found.' );
 		}
 
 		$order = array_shift( $orders );
 
 		if ( ! is_a( $order, WC_Order::class ) ) {
-			yoco( Logger::class )->logError( 'getOrders: ' . __( 'Order is not instance of WC_Order.', 'yoco_wc_payment_gateway' ) );
-			throw new Exception( 'getOrders: ' . __( 'Order is not instance of WC_Order.' ) );
+			yoco( Logger::class )->logError( 'getOrders: Order is not instance of WC_Order.' );
+			throw new Exception( 'getOrders: Order is not instance of WC_Order.' );
 		}
 
 		return $order;
@@ -96,7 +96,7 @@ class OrdersRepository {
 		$order = wc_get_order( $id );
 
 		if ( ! is_a( $order, WC_Order::class ) ) {
-			yoco( Logger::class )->logError( sprintf( __( 'Order ID (%s) is not instance of WC_Order.', 'yoco_wc_payment_gateway' ), $id ) );
+			yoco( Logger::class )->logError( sprintf( 'Order ID (%s) is not instance of WC_Order.', $id ) );
 			throw new Exception( sprintf( __( 'Order ID (%s) is not instance of WC_Order.', 'yoco_wc_payment_gateway' ), $id ) );
 		}
 

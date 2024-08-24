@@ -19,6 +19,8 @@
  *
  * @link http://codex.wordpress.org/Child_Themes
  */
+
+
 function oceanwp_child_enqueue_parent_style() {
 
 	// Dynamically get version number of the parent stylesheet (lets browsers re-cache your stylesheet when you update the theme).

@@ -204,7 +204,7 @@ class Cookie_Notice_Welcome {
 	 */
 	public function welcome_screen( $screen, $echo = true ) {
 		if ( ! current_user_can( 'install_plugins' ) )
-			wp_die( _( 'You do not have permission to access this page.', 'cookie-notice' ) );
+			wp_die( __( 'You do not have permission to access this page.', 'cookie-notice' ) );
 
 		$sidebars = [ 'about', 'login', 'register', 'configure', 'success' ];
 		$steps = [ 1, 2, 3, 4 ];
@@ -232,10 +232,10 @@ class Cookie_Notice_Welcome {
 		}
 
 		if ( empty( $screen ) )
-			wp_die( _( 'You do not have permission to access this page.', 'cookie-notice' ) );
+			wp_die( __( 'You do not have permission to access this page.', 'cookie-notice' ) );
 
 		if ( wp_doing_ajax() && ! check_ajax_referer( 'cookie-notice-welcome', 'nonce' ) )
-			wp_die( _( 'You do not have permission to access this page.', 'cookie-notice' ) );
+			wp_die( __( 'You do not have permission to access this page.', 'cookie-notice' ) );
 
 		// step screens
 		if ( in_array( $screen, $steps ) ) {
@@ -367,7 +367,7 @@ class Cookie_Notice_Welcome {
 				</div>';
 			} elseif ( $screen == 4 ) {
 				$html .= $this->welcome_screen( 'success', false );
-				
+
 				// get main instance
 				$cn = Cookie_Notice();
 				$subscription = $cn->get_subscription();
@@ -382,7 +382,7 @@ class Cookie_Notice_Welcome {
 								<p>' . esc_html__( 'Log in to your Cookie Compliance account and continue configuring your Privacy Experience.', 'cookie-notice' ) . '</p>
 							</div>
 							<div class="cn-buttons">
-								<a href="' . esc_url( $cn->get_url( 'host', '?utm_campaign=configure&utm_source=wordpress&utm_medium=button#/en/cc/login' ) ) . '" class="cn-btn cn-btn-lg" target="_blank">' . esc_html__( 'Go to Application', 'cookie-notice' ) . '</a>
+								<a href="' . esc_url( $cn->get_url( 'host', '?utm_campaign=configure&utm_source=wordpress&utm_medium=button#/login' ) ) . '" class="cn-btn cn-btn-lg" target="_blank">' . esc_html__( 'Go to Application', 'cookie-notice' ) . '</a>
 							</div>
 						</div>
 					</div>

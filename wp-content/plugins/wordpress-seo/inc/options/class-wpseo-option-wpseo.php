@@ -95,8 +95,6 @@ class WPSEO_Option_Wpseo extends WPSEO_Option {
 		'wincher_tokens'                           => [],
 		'wincher_automatically_add_keyphrases'     => false,
 		'wincher_website_id'                       => '',
-		'wordproof_integration_active'             => false,
-		'wordproof_integration_changed'            => false,
 		'first_time_install'                       => false,
 		'should_redirect_after_install_free'       => false,
 		'activation_redirect_timestamp_free'       => 0,
@@ -219,7 +217,7 @@ class WPSEO_Option_Wpseo extends WPSEO_Option {
 		/**
 		 * Filter: 'wpseo_enable_tracking' - Enables the data tracking of Yoast SEO Premium.
 		 *
-		 * @api string $is_enabled The enabled state. Default is false.
+		 * @param string $is_enabled The enabled state. Default is false.
 		 */
 		$this->defaults['tracking'] = apply_filters( 'wpseo_enable_tracking', false );
 
@@ -454,13 +452,6 @@ class WPSEO_Option_Wpseo extends WPSEO_Option {
 					}
 					break;
 
-				case 'wordproof_integration_active':
-					$clean[ $key ] = ( isset( $dirty[ $key ] ) ? WPSEO_Utils::validate_bool( $dirty[ $key ] ) : false );
-					// If the setting has changed, record it.
-					if ( $old[ $key ] !== $clean[ $key ] ) {
-						$clean['wordproof_integration_changed'] = true;
-					}
-					break;
 				case 'last_known_no_unindexed':
 					$clean[ $key ] = $old[ $key ];
 
@@ -469,7 +460,7 @@ class WPSEO_Option_Wpseo extends WPSEO_Option {
 
 						if ( is_array( $items ) ) {
 							foreach ( $items as $item_key => $item ) {
-								if ( ! \is_string( $item_key ) || ! \is_numeric( $item ) ) {
+								if ( ! is_string( $item_key ) || ! is_numeric( $item ) ) {
 									unset( $items[ $item_key ] );
 								}
 							}

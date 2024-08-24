@@ -3,11 +3,11 @@
  * Plugin Name:         Ocean Extra
  * Plugin URI:          https://oceanwp.org/extension/ocean-extra/
  * Description:         Add extra features and flexibility to your OceanWP theme for a turbocharged premium experience and full control over every aspect of your website.
- * Version:             2.2.3
+ * Version:             2.3.0
  * Author:              OceanWP
  * Author URI:          https://oceanwp.org/
  * Requires at least:   5.6
- * Tested up to:        6.4.1
+ * Tested up to:        6.5.5
  * Text Domain: ocean-extra
  * Domain Path: /languages
  *
@@ -87,6 +87,14 @@ final class Ocean_Extra {
 	 */
 	public $plugin_path;
 
+	/**
+	 * The plugin data.
+	 *
+	 * @var     array
+	 * @access  public
+	 */
+	public $plugin_data;
+
 	// Admin - Start
 	/**
 	 * The admin object.
@@ -108,7 +116,8 @@ final class Ocean_Extra {
 		$this->token       = 'ocean-extra';
 		$this->plugin_url  = plugin_dir_url( __FILE__ );
 		$this->plugin_path = plugin_dir_path( __FILE__ );
-		$this->version     = '2.2.3';
+		$this->plugin_data = get_file_data( __FILE__, array( 'Version' => 'Version' ), false );
+		$this->version     = $this->plugin_data['Version'];
 
 		define( 'OE_URL', $this->plugin_url );
 		define( 'OE_PATH', $this->plugin_path );
@@ -295,6 +304,50 @@ final class Ocean_Extra {
 			return;
 
 		}
+	}
+
+	/**
+	 * Return post id
+	 *
+	 * @since 2.2.8
+	 * @return string Post id.
+	 */
+	public static function oe_post_id() {
+
+		if ( function_exists( 'oceanwp_post_id' ) ) {
+			return oceanwp_post_id();
+		} else {
+			// Default value.
+			$id = '';
+
+			// If singular get_the_ID.
+			if ( is_singular() ) {
+				$id = get_the_ID();
+			}
+
+			// Get ID of WooCommerce product archive.
+			elseif ( OCEANWP_WOOCOMMERCE_ACTIVE && is_shop() ) {
+				$shop_id = wc_get_page_id( 'shop' );
+				if ( isset( $shop_id ) ) {
+					$id = $shop_id;
+				}
+			}
+
+			// Posts page.
+			elseif ( is_home() && $page_for_posts = get_option( 'page_for_posts' ) ) {
+				$id = $page_for_posts;
+			}
+
+			// Apply filters.
+			$id = apply_filters( 'ocean_post_id', $id );
+
+			// Sanitize.
+			$id = $id ? $id : '';
+
+			// Return ID.
+			return $id;
+		}
+
 	}
 
 	/**
@@ -567,7 +620,7 @@ final class Ocean_Extra {
 			$output .= self::opengraph_tag( 'property', 'og:description', trim( $description ) );
 		}
 
-		if ( has_post_thumbnail( oceanwp_post_id() ) && true == $has_img ) {
+		if ( has_post_thumbnail( self::oe_post_id() ) && true == $has_img ) {
 			$output .= self::opengraph_tag( 'property', 'og:image', trim( $image ) );
 			$output .= self::opengraph_tag( 'property', 'og:image:width', absint( $get_image[1] ) );
 			$output .= self::opengraph_tag( 'property', 'og:image:height', absint( $get_image[2] ) );

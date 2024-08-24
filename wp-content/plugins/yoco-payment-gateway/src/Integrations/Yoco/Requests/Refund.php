@@ -26,7 +26,7 @@ class Refund {
 		$refund = wc_create_refund( apply_filters( 'yoco_payment_gateway/request/refund/args', $args ) );
 
 		if ( is_wp_error( $refund ) ) {
-			yoco( Logger::class )->logError( __( 'Refund creation failed:', 'yoco_wc_payment_gateway' ) . ' ' . $refund->get_error_message() . ' code: ' . $refund->get_error_code() );
+			yoco( Logger::class )->logError( 'Refund creation failed: ' . $refund->get_error_message() . ' code: ' . $refund->get_error_code() );
 			throw new Error( $refund->get_error_message(), (int) $refund->get_error_code() );
 		}
 

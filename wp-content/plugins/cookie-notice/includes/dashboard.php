@@ -122,7 +122,7 @@ class Cookie_Notice_Dashboard {
 			return;
 
 		// scripts
-		wp_register_script( 'cookie-notice-admin-chartjs', COOKIE_NOTICE_URL . '/assets/chartjs/chart.min.js', [ 'jquery' ], '4.4.0', true );
+		wp_register_script( 'cookie-notice-admin-chartjs', COOKIE_NOTICE_URL . '/assets/chartjs/chart.min.js', [ 'jquery' ], '4.4.3', true );
 		wp_enqueue_script( 'cookie-notice-admin-dashboard', COOKIE_NOTICE_URL . '/js/admin-dashboard.js', [ 'jquery', 'cookie-notice-admin-chartjs' ], $cn->defaults['version'], true );
 
 		// cycle usage data
@@ -130,6 +130,9 @@ class Cookie_Notice_Dashboard {
 			'threshold'	=> ! empty( $analytics['cycleUsage']->threshold ) ? (int) $analytics['cycleUsage']->threshold : 0,
 			'visits'	=> ! empty( $analytics['cycleUsage']->visits ) ? (int) $analytics['cycleUsage']->visits : 0
 		];
+
+		// no more than threshold available
+		$cycle_usage['visits'] = $cycle_usage['visits'] > $cycle_usage['threshold'] ? $cycle_usage['threshold'] : $cycle_usage['visits'];
 
 		// available visits, -1 for no pro plans
 		$cycle_usage['visits_available'] = $cycle_usage['threshold'] ? $cycle_usage['threshold'] - $cycle_usage['visits'] : -1;

@@ -1,10 +1,10 @@
 === WooCommerce Payfast Gateway ===
-Contributors: woocommerce, automattic, royho, akeda, mattyza, bor0, woothemes, dwainm, laurendavissmith001
+Contributors: woocommerce, automattic
 Tags: credit card, payfast, payment request, woocommerce, automattic
-Requires at least: 6.2
-Tested up to: 6.4
-Requires PHP: 7.3
-Stable tag: 1.6.0
+Requires at least: 6.4
+Tested up to: 6.6
+Requires PHP: 7.4
+Stable tag: 1.6.6
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -37,6 +37,49 @@ For help setting up and configuring, please refer to our [user guide](https://do
 If you get stuck, you can ask for help in the Plugin Forum.
 
 == Changelog ==
+
+= 1.6.6 - 2024-07-29 =
+* Dev - Bump WooCommerce "tested up to" version 9.1.
+* Dev - Bump WooCommerce minimum supported version to 8.9.
+* Dev - Bump WordPress "tested up to" version 6.6.
+* Dev - Bump WordPress minimum supported version to 6.4.
+* Dev - Update NPM packages and node version to v20 to modernize developer experience.
+* Dev - Exclude the Woo Comment Hook `@since` sniff.
+* Dev - Fix QIT E2E tests and add support for a few new test types.
+* Tweak - Update WordPress.org plugin assets.
+
+= 1.6.5 - 2024-05-14 =
+* Fix - Use `rawurlencode` around the call to `get_site_url` to ensure things are encoded properly.
+
+= 1.6.4 - 2024-05-07 =
+* Fix - Resolved signature mismatch error caused by HTML entity encoding in site/blog name.
+* Dev - Bump WooCommerce "tested up to" version 8.8.
+* Dev - Bump WooCommerce minimum supported version to 8.6.
+
+= 1.6.3 - 2024-05-02 =
+* Fix - Enforce amount match check for all payments in the Payfast ITN handler.
+* Dev - Bump WooCommerce "tested up to" version 8.7.
+* Dev - Bump WooCommerce minimum supported version to 8.5.
+* Dev - Bump WordPress "tested up to" version 6.5.
+* Dev - Bump WordPress minimum supported version to 6.3.
+
+= 1.6.2 - 2024-03-25 =
+* Dev - Bump WooCommerce "tested up to" version 8.6.
+* Dev - Bump WooCommerce minimum supported version to 8.4.
+* Dev - Bump WordPress minimum supported version to 6.3.
+* Fix - Payfast gateway not visible on Checkout when ZAR currency is set via WooPayments multi-currency feature.
+* Fix - Allow navigation back from PayFast gateway payment page.
+
+= 1.6.1 - 2024-01-08 =
+* Add - Readme.md file for e2e tests.
+* Dev - Declare compatibility with WooCommerce Blocks.
+* Dev - Declare compatibility with Product Editor.
+* Dev - Updated the main file of the plugin to match the plugin's slug.
+* Dev - Bump PHP minimum supported version to 7.4.
+* Dev - Bump WooCommerce "tested up to" version 8.4.
+* Dev - Bump WooCommerce minimum supported version to 8.2.
+* Dev - Resolve coding standards issues.
+* Tweak - Bump PHP "tested up to" version 8.3.
 
 = 1.6.0 - 2023-11-22 =
 * Dev - Add Playwright end-to-end tests.

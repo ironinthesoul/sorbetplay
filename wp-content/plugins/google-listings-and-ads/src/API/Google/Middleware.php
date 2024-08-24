@@ -14,7 +14,9 @@ use Automattic\WooCommerce\GoogleListingsAndAds\Proxies\WP;
 use Automattic\WooCommerce\GoogleListingsAndAds\Utility\DateTimeUtility;
 use Automattic\WooCommerce\GoogleListingsAndAds\Value\TosAccepted;
 use Automattic\WooCommerce\GoogleListingsAndAds\Vendor\GuzzleHttp\Client;
+use Automattic\WooCommerce\GoogleListingsAndAds\Vendor\Psr\Container\ContainerExceptionInterface;
 use Automattic\WooCommerce\GoogleListingsAndAds\Vendor\Psr\Container\ContainerInterface;
+use Automattic\WooCommerce\GoogleListingsAndAds\Vendor\Psr\Container\NotFoundExceptionInterface;
 use Automattic\WooCommerce\GoogleListingsAndAds\Vendor\Psr\Http\Client\ClientExceptionInterface;
 use DateTime;
 use Exception;
@@ -329,6 +331,7 @@ class Middleware implements OptionsAwareInterface {
 
 				$billing_url = $response['invitationLink'] ?? '';
 				$ads->update_billing_url( $billing_url );
+				$ads->update_ocid_from_billing_url( $billing_url );
 
 				return [
 					'id'          => $id,
@@ -450,7 +453,9 @@ class Middleware implements OptionsAwareInterface {
 			);
 		} catch ( ClientExceptionInterface $e ) {
 			do_action( 'woocommerce_gla_guzzle_client_exception', $e, __METHOD__ );
-
+			return new TosAccepted( false, $e->getMessage() );
+		} catch ( Exception $e ) {
+			do_action( 'woocommerce_gla_exception', $e, __METHOD__ );
 			return new TosAccepted( false, $e->getMessage() );
 		}
 	}
@@ -477,6 +482,19 @@ class Middleware implements OptionsAwareInterface {
 	protected function get_manager_url( string $name = '' ): string {
 		$url = $this->container->get( 'connect_server_root' ) . 'google/manager';
 		return $name ? trailingslashit( $url ) . $name : $url;
+	}
+
+	/**
+	 * Get the Google Shopping Data Integration auth endpoint URL
+	 *
+	 * @return string
+	 */
+	public function get_sdi_auth_endpoint(): string {
+		return $this->container->get( 'connect_server_root' )
+				. 'google/google-sdi/v1/credentials/partners/WOO_COMMERCE/merchants/'
+				. $this->strip_url_protocol( $this->get_site_url() )
+				. '/oauth/redirect:generate'
+				. '?merchant_id=' . $this->options->get_merchant_id();
 	}
 
 	/**
@@ -521,103 +539,6 @@ class Middleware implements OptionsAwareInterface {
 	}
 
 	/**
-	 * Get Account Review Status
-	 *
-	 * @return array With the response data
-	 * @throws Exception When there is an invalid response.
-	 */
-	public function get_account_review_status() {
-		try {
-
-			if ( ! $this->is_subaccount() ) {
-				return [];
-			}
-
-			/** @var Client $client */
-			$client = $this->container->get( Client::class );
-			$result = $client->get(
-				$this->get_manager_url( 'account-review-status/' . $this->options->get_merchant_id() ),
-			);
-
-			$response = json_decode( $result->getBody()->getContents(), true );
-
-			if ( 200 === $result->getStatusCode() && isset( $response['freeListingsProgram'] ) && isset( $response['shoppingAdsProgram'] ) ) {
-				do_action( 'woocommerce_gla_request_review_response', $response );
-				return $response;
-			}
-			do_action( 'woocommerce_gla_guzzle_invalid_response', $response, __METHOD__ );
-			$error = $response['message'] ?? __( 'Invalid response getting account review status', 'google-listings-and-ads' );
-			throw new Exception( $error, $result->getStatusCode() );
-		} catch ( ClientExceptionInterface $e ) {
-			do_action( 'woocommerce_gla_guzzle_client_exception', $e, __METHOD__ );
-
-			throw new Exception(
-				$this->client_exception_message( $e, __( 'Error getting account review status', 'google-listings-and-ads' ) ),
-				$e->getCode()
-			);
-		}
-	}
-
-
-	/**
-	 * Request a new account review
-	 *
-	 * @param array $regions Regions to request a review.
-	 * @return array With a successful message
-	 * @throws Exception When there is an invalid response.
-	 */
-	public function account_request_review( $regions ) {
-		try {
-			/** @var Client $client */
-			$client = $this->container->get( Client::class );
-
-			// For each region we request a new review
-			foreach ( $regions as $region_code ) {
-				$result = $client->post(
-					$this->get_manager_url( 'account-review-request' ),
-					[
-						'body' => json_encode(
-							[
-								'accountId'  => $this->options->get_merchant_id(),
-								'regionCode' => $region_code,
-							]
-						),
-					]
-				);
-
-				$response = json_decode( $result->getBody()->getContents(), true );
-
-				if ( 200 !== $result->getStatusCode() ) {
-					do_action(
-						'woocommerce_gla_request_review_failure',
-						[
-							'error'       => 'response',
-							'region_code' => $region_code,
-							'response'    => $response,
-						]
-					);
-					do_action( 'woocommerce_gla_guzzle_invalid_response', $response, __METHOD__ );
-					$error = $response['message'] ?? __( 'Invalid response getting requesting a new review.', 'google-listings-and-ads' );
-					throw new Exception( $error, $result->getStatusCode() );
-				}
-			}
-
-			// Otherwise, return a successful message and update the account status
-			return [
-				'message' => __( 'A new review has been successfully requested', 'google-listings-and-ads' ),
-			];
-
-		} catch ( ClientExceptionInterface $e ) {
-			do_action( 'woocommerce_gla_guzzle_client_exception', $e, __METHOD__ );
-
-			throw new Exception(
-				$this->client_exception_message( $e, __( 'Error requesting a new review.', 'google-listings-and-ads' ) ),
-				$e->getCode()
-			);
-		}
-	}
-
-	/**
 	 * This function detects if the current account is a sub-account
 	 * This function is cached in the MC_IS_SUBACCOUNT transient
 	 *
@@ -645,5 +566,46 @@ class Middleware implements OptionsAwareInterface {
 
 		// since transients don't support booleans, we save them as 0/1 and do the conversion here
 		return boolval( $is_subaccount );
+	}
+
+	/**
+	 * Performs a request to Google Shopping Data Integration (SDI) to get required information in order to form an auth URL.
+	 *
+	 * @return array An array with the JSON response from the WCS server.
+	 * @throws NotFoundExceptionInterface  When the container was not found.
+	 * @throws ContainerExceptionInterface When an error happens while retrieving the container.
+	 * @throws Exception When the response status is not successful.
+	 * @see google-sdi in google/services inside WCS
+	 */
+	public function get_sdi_auth_params() {
+		try {
+			/** @var Client $client */
+			$client   = $this->container->get( Client::class );
+			$result   = $client->get( $this->get_sdi_auth_endpoint() );
+			$response = json_decode( $result->getBody()->getContents(), true );
+
+			if ( 200 !== $result->getStatusCode() ) {
+				do_action(
+					'woocommerce_gla_partner_app_auth_failure',
+					[
+						'error'    => 'response',
+						'response' => $response,
+					]
+				);
+				do_action( 'woocommerce_gla_guzzle_invalid_response', $response, __METHOD__ );
+				$error = $response['message'] ?? __( 'Invalid response authenticating partner app.', 'google-listings-and-ads' );
+				throw new Exception( $error, $result->getStatusCode() );
+			}
+
+			return $response;
+
+		} catch ( ClientExceptionInterface $e ) {
+			do_action( 'woocommerce_gla_guzzle_client_exception', $e, __METHOD__ );
+
+			throw new Exception(
+				$this->client_exception_message( $e, __( 'Error authenticating Google Partner APP.', 'google-listings-and-ads' ) ),
+				$e->getCode()
+			);
+		}
 	}
 }

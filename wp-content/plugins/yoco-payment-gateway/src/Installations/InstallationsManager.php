@@ -29,7 +29,7 @@ class InstallationsManager {
 		$key = 'live' === $mode ? self::INSTALLATION_ID_OPTION_LIVE_KEY : self::INSTALLATION_ID_OPTION_TEST_KEY;
 
 		if ( ! isset( $response['id'] ) ) {
-			yoco( Logger::class )->logError( __( 'Response is missing installation ID.', 'yoco_wc_payment_gateway' ) );
+			yoco( Logger::class )->logError( 'Response is missing installation ID.' );
 			return;
 		}
 
@@ -42,11 +42,11 @@ class InstallationsManager {
 		$updated = update_option( $key, $response['id'] );
 
 		if ( false === $updated ) {
-			yoco( Logger::class )->logError( __( 'Failed to save Yoco installation ID.', 'yoco_wc_payment_gateway' ) );
+			yoco( Logger::class )->logError( 'Failed to save Yoco installation ID.' );
 			return;
 		}
 
-		yoco( Logger::class )->logInfo( __( 'Successfully saved new installation ID.', 'yoco_wc_payment_gateway' ) );
+		yoco( Logger::class )->logInfo( 'Successfully saved new installation ID.' );
 	}
 
 	public function getInstallationId( string $mode ): string {
@@ -67,7 +67,7 @@ class InstallationsManager {
 		$key = 'live' === $mode ? self::WEBHOOK_SECRET_OPTION_LIVE_KEY : self::WEBHOOK_SECRET_OPTION_TEST_KEY;
 
 		if ( ! isset( $response['subscription'] ) ) {
-			yoco( Logger::class )->logError( __( 'Response is missing subscription secret.', 'yoco_wc_payment_gateway' ) );
+			yoco( Logger::class )->logError( 'Response is missing subscription secret.' );
 			return;
 		}
 
@@ -80,11 +80,11 @@ class InstallationsManager {
 		$updated = update_option( $key, $response['subscription'] );
 
 		if ( false === $updated ) {
-			yoco( Logger::class )->logError( __( 'Failed to save subscription secret.', 'yoco_wc_payment_gateway' ) );
+			yoco( Logger::class )->logError( 'Failed to save subscription secret.' );
 			return;
 		}
 
-		yoco( Logger::class )->logInfo( __( 'Successfully saved new subscription secret.', 'yoco_wc_payment_gateway' ) );
+		yoco( Logger::class )->logInfo( 'Successfully saved new subscription secret.' );
 	}
 
 	public function getWebhookSecret( string $mode ): string {

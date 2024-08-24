@@ -34,6 +34,13 @@ class OptionsProcessor {
 
 			$response = $installationRequest->send();
 
+			// If we get 500 error, reset Idempotence Key and retry the request.
+			if ( 500 === (int) $response['code'] ) {
+				add_filter( 'yoco_payment_gateway/installation/request/headers', array( $this, 'resetIdempotenceKey' ) );
+
+				$response = $installationRequest->send();
+			}
+
 			if ( ! in_array( $response['code'], array( 200, 201, 202 ) ) ) {
 				$error_message = isset( $response['body']['errorMessage'] ) ? $response['body']['errorMessage'] : '';
 				$error_code    = isset( $response['body']['errorCode'] ) ? $response['body']['errorCode'] : '';
@@ -58,7 +65,7 @@ class OptionsProcessor {
 
 	private function saveInstallationData( array $response ) {
 		if ( ! isset( $response['id'] ) || empty( $response['id'] ) ) {
-			yoco( Logger::class )->logError( __( 'Response missing installation ID.', 'yoco_wc_payment_gateway' ) );
+			yoco( Logger::class )->logError( 'Response missing installation ID.' );
 			throw new Exception( __( 'Response missing installation ID.', 'yoco_wc_payment_gateway' ) );
 		}
 
@@ -69,7 +76,7 @@ class OptionsProcessor {
 			|| ! isset( $response['subscription']->secret )
 			|| empty( $response['subscription']->secret )
 		) {
-			yoco( Logger::class )->logError( __( 'Response missing subscription secret.', 'yoco_wc_payment_gateway' ) );
+			yoco( Logger::class )->logError( 'Response missing subscription secret.' );
 			throw new Exception( __( 'Response missing subscription secret.', 'yoco_wc_payment_gateway' ) );
 		}
 
@@ -89,14 +96,24 @@ class OptionsProcessor {
 	private function validateKeys(): void {
 		if ( 'test' === $this->gateway->mode->getMode() && empty( preg_match( '/^sk_test/', $this->gateway->credentials->getTestSecretKey() ) ) ) {
 			yoco( Notices::class )->renderNotice( 'warning', __( 'Please check the formatting of the secret key.', 'yoco_wc_payment_gateway' ) );
-			yoco( Logger::class )->logError( __( 'Test secret key seem to be invalid.', 'yoco_wc_payment_gateway' ) );
+			yoco( Logger::class )->logError( 'Test secret key seem to be invalid.' );
 			throw new Exception( __( 'Test secret key seem to be invalid.', 'yoco_wc_payment_gateway' ) );
 		}
 
 		if ( 'live' === $this->gateway->mode->getMode() && empty( preg_match( '/^sk_live/', $this->gateway->credentials->getLiveSecretKey() ) ) ) {
 			yoco( Notices::class )->renderNotice( 'warning', __( 'Please check the formatting of the secret key.', 'yoco_wc_payment_gateway' ) );
-			yoco( Logger::class )->logError( __( 'Live secret key seem to be invalid.', 'yoco_wc_payment_gateway' ) );
+			yoco( Logger::class )->logError( 'Live secret key seem to be invalid.' );
 			throw new Exception( __( 'Live secret key seem to be invalid.', 'yoco_wc_payment_gateway' ) );
 		}
+	}
+
+	public function resetIdempotenceKey( $headers ) {
+		if ( ! isset( $headers['Idempotency-Key'] ) || ! is_scalar( $headers['Idempotency-Key'] ) ) {
+			return $headers;
+		}
+
+		$headers['Idempotency-Key'] = hash( 'SHA256', $headers['Idempotency-Key'] . time() );
+
+		return $headers;
 	}
 }

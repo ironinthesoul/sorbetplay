@@ -17,6 +17,8 @@ class Telemetry {
 			'yoco_payment_gateway/telemetry/data',
 			array(
 				'domain'                   => $object->getHostUrl(),
+				'webhooks'                 => $object->getWebhooks(),
+				'preferredWebhook'         => $object->getPreferredWebhook(),
 				'installationName'         => $object->getSiteName(),
 				'phpVersion'               => $object->getPhpVersion(),
 				'wordPressVersion'         => $object->getWpVersion(),

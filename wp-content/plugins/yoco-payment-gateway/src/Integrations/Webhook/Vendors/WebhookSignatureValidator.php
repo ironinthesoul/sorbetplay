@@ -35,7 +35,7 @@ class WebhookSignatureValidator {
 			|| ! isset( $headers['webhook_timestamp'] )
 			|| ! isset( $headers['webhook_signature'] )
 		) {
-			yoco( Logger::class )->logError( __( 'Webhook Signature Validator is missing required headers', 'yoco_wc_payment_gateway' ) );
+			yoco( Logger::class )->logError( 'Webhook Signature Validator is missing required headers' );
 			throw new Exception( 'Webhook Signature Validator is missing required headers' );
 		}
 
@@ -62,13 +62,13 @@ class WebhookSignatureValidator {
 				return json_decode( $payload, true );
 			}
 		}
-		yoco( Logger::class )->logError( __( 'Webhook no matching signature found', 'yoco_wc_payment_gateway' ) );
+		yoco( Logger::class )->logError( 'Webhook no matching signature found' );
 		throw new Exception( 'Webhook no matching signature found' );
 	}
 
 	public function sign( string $msgId, int $timestamp, string $payload ): string {
 		if ( ! is_int( $timestamp ) ) {
-			yoco( Logger::class )->logError( __( 'Invalid timestamp format', 'yoco_wc_payment_gateway' ) );
+			yoco( Logger::class )->logError( 'Invalid timestamp format' );
 			throw new Exception( 'Invalid timestamp format' );
 		}
 		$toSign    = "{$msgId}.{$timestamp}.{$payload}";
@@ -82,12 +82,12 @@ class WebhookSignatureValidator {
 		$timestamp = intval( $timestampHeader, 10 );
 
 		if ( $timestamp < ( $now - self::TOLERANCE ) ) {
-			yoco( Logger::class )->logError( __( 'Webhook timestamp is too old', 'yoco_wc_payment_gateway' ) );
+			yoco( Logger::class )->logError( 'Webhook timestamp is too old' );
 			throw new Exception( 'Webhook timestamp is too old' );
 		}
 
 		if ( $timestamp > ( $now + self::TOLERANCE ) ) {
-			yoco( Logger::class )->logError( __( 'Webhook timestamp is too new', 'yoco_wc_payment_gateway' ) );
+			yoco( Logger::class )->logError( 'Webhook timestamp is too new' );
 			throw new Exception( 'Webhook timestamp is too new' );
 		}
 

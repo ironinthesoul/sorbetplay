@@ -9,6 +9,8 @@ use Automattic\WooCommerce\GoogleListingsAndAds\Ads\AssetSuggestionsService as A
 use Automattic\WooCommerce\GoogleListingsAndAds\API\Google\Ads;
 use Automattic\WooCommerce\GoogleListingsAndAds\API\Google\AdsCampaign;
 use Automattic\WooCommerce\GoogleListingsAndAds\API\Google\Connection;
+use Automattic\WooCommerce\GoogleListingsAndAds\API\Google\Merchant;
+use Automattic\WooCommerce\GoogleListingsAndAds\API\Google\MerchantMetrics;
 use Automattic\WooCommerce\GoogleListingsAndAds\API\Google\Middleware;
 use Automattic\WooCommerce\GoogleListingsAndAds\API\Google\Settings;
 use Automattic\WooCommerce\GoogleListingsAndAds\API\Google\AdsAssetGroup;
@@ -48,6 +50,8 @@ use Automattic\WooCommerce\GoogleListingsAndAds\API\Site\Controllers\MerchantCen
 use Automattic\WooCommerce\GoogleListingsAndAds\API\Site\Controllers\MerchantCenter\SupportedCountriesController;
 use Automattic\WooCommerce\GoogleListingsAndAds\API\Site\Controllers\MerchantCenter\SyncableProductsCountController;
 use Automattic\WooCommerce\GoogleListingsAndAds\API\Site\Controllers\MerchantCenter\TargetAudienceController;
+use Automattic\WooCommerce\GoogleListingsAndAds\API\Site\Controllers\RestAPI\AuthController as RestAPIAuthController;
+use Automattic\WooCommerce\GoogleListingsAndAds\API\WP\OAuthService;
 use Automattic\WooCommerce\GoogleListingsAndAds\DB\ProductFeedQueryHelper;
 use Automattic\WooCommerce\GoogleListingsAndAds\DB\Query\AttributeMappingRulesQuery;
 use Automattic\WooCommerce\GoogleListingsAndAds\DB\Query\BudgetRecommendationQuery;
@@ -117,7 +121,7 @@ class RESTServiceProvider extends AbstractServiceProvider {
 		$this->share( AdsBudgetRecommendationController::class, BudgetRecommendationQuery::class, Ads::class );
 		$this->share( PhoneVerificationController::class, PhoneVerification::class );
 		$this->share( MerchantCenterAccountController::class, MerchantAccountService::class );
-		$this->share( MerchantCenterRequestReviewController::class, Middleware::class, RequestReviewStatuses::class, TransientsInterface::class );
+		$this->share( MerchantCenterRequestReviewController::class, Middleware::class, Merchant::class, RequestReviewStatuses::class, TransientsInterface::class );
 		$this->share_with_container( MerchantCenterReportsController::class );
 		$this->share( ShippingRateBatchController::class, ShippingRateQuery::class );
 		$this->share( ShippingRateController::class, ShippingRateQuery::class );
@@ -128,7 +132,7 @@ class RESTServiceProvider extends AbstractServiceProvider {
 		$this->share( SupportedCountriesController::class, WC::class, GoogleHelper::class );
 		$this->share( SettingsSyncController::class, Settings::class );
 		$this->share( DisconnectController::class );
-		$this->share( SetupCompleteController::class );
+		$this->share( SetupCompleteController::class, MerchantMetrics::class );
 		$this->share( AssetSuggestionsController::class, AdsAssetSuggestionsService::class );
 		$this->share( SyncableProductsCountController::class, JobRepository::class );
 		$this->share( PolicyComplianceCheckController::class, PolicyComplianceCheck::class );
@@ -137,6 +141,7 @@ class RESTServiceProvider extends AbstractServiceProvider {
 		$this->share( AttributeMappingCategoriesController::class );
 		$this->share( AttributeMappingSyncerController::class, ProductSyncStats::class );
 		$this->share( TourController::class );
+		$this->share( RestAPIAuthController::class, OAuthService::class, MerchantAccountService::class );
 	}
 
 	/**
