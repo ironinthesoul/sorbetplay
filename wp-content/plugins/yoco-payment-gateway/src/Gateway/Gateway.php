@@ -26,7 +26,7 @@ class Gateway extends WC_Payment_Gateway {
 
 		$this->id         = 'class_yoco_wc_payment_gateway';
 		$this->enabled    = $this->isEnabled();
-		$this->icon       = trailingslashit( YOCO_ASSETS_URI ) . 'images/yoco.svg';
+		$this->icon       = trailingslashit( YOCO_ASSETS_URI ) . 'images/yoco-2024.svg';
 		$this->has_fields = false;
 		$this->supports   = array( 'products', 'refunds' );
 
@@ -37,6 +37,13 @@ class Gateway extends WC_Payment_Gateway {
 		$this->method_description = __( 'Yoco Payments.', 'yoco_wc_payment_gateway' );
 
 		$this->form_fields = apply_filters( 'yoco_payment_gateway_form_fields', array() );
+
+		// Supported functionality.
+		$this->supports = array(
+			'products',
+			'pre-orders',
+			'refunds',
+		);
 
 		add_action( "woocommerce_update_options_payment_gateways_{$this->id}", array( $this, 'update_admin_options' ) );
 		add_filter( "woocommerce_settings_api_sanitized_fields_{$this->id}", array( $this, 'unset_fields' ) );
@@ -60,14 +67,14 @@ class Gateway extends WC_Payment_Gateway {
 	 */
 	public function get_icon() {
 
-		$icon = '<img class="yoco-payment-method-icon" style="max-height:32px;float:right;" alt="' . esc_attr( $this->title ) . '" width="74" height="32" src="' . esc_url( $this->icon ) . '"/>';
+		$icon = '<img class="yoco-payment-method-icon" style="max-height:1em;width:auto;" alt="' . esc_attr( $this->title ) . '" width="100" height="24" src="' . esc_url( $this->icon ) . '"/>';
 
 		return apply_filters( 'woocommerce_gateway_icon', $icon, $this->id );
 	}
 
 	public function process_payment( $order_id ): ?array {
 		$order     = wc_get_order( $order_id );
-		$processor = new PaymentProcessor( $this );
+		$processor = new PaymentProcessor();
 
 		return $processor->process( $order );
 	}

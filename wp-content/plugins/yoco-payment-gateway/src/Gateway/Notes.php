@@ -16,58 +16,61 @@ class Notes {
 		add_action( 'yoco_payment_gateway/order/meta/yoco_order_refund_id/updated_successfully', array( $this, 'addRefundIdNoteToOrder' ) );
 	}
 
-	public function addSessionIdNoteToOrder( int $orderId ): void {
-		$order = OrdersRepository::getById( $orderId );
+	public function addSessionIdNoteToOrder( int $order_id ): void {
+		$order = OrdersRepository::getById( $order_id );
 
-		if ( empty( $order ) ) {
-			yoco( Logger::class )->logError( sprintf( __( 'Failed to retrieve order (session) of ID %s.', 'yoco_wc_payment_gateway' ), $orderId ) );
+		if ( null === $order ) {
+			yoco( Logger::class )->logError( sprintf( 'Can\'t add Checkout ID Note, Failed to retrieve Woo Order #%s.', $order_id ) );
 			return;
 		}
 
-		$sessionId = yoco( Metadata::class )->getOrderCheckoutId( $order );
+		$session_id = yoco( Metadata::class )->getOrderCheckoutId( $order );
 
-		if ( empty( $sessionId ) ) {
-			yoco( Logger::class )->logError( sprintf( __( 'Failed to retrieve order session ID of ID %s.', 'yoco_wc_payment_gateway' ), $orderId ) );
+		if ( empty( $session_id ) ) {
+			yoco( Logger::class )->logError( sprintf( 'Can\'t add Checkout ID Note, Failed to retrieve Checkout Session ID from Woo Order #%s.', $order_id ) );
 			return;
 		}
 
-		$this->addNote( $order, sprintf( __( 'Yoco: Received checkout session ID (%s).', 'yoco_wc_payment_gateway' ), $sessionId ) );
+		// translators: Checkout Session ID.
+		$this->addNote( $order, sprintf( esc_html__( 'Yoco: Received checkout session ID (%s).', 'yoco_wc_payment_gateway' ), esc_html( $session_id ) ) );
 	}
 
-	public function addPaymentIdNoteToOrder( int $orderId ): void {
-		$order = OrdersRepository::getById( $orderId );
+	public function addPaymentIdNoteToOrder( int $order_id ): void {
+		$order = OrdersRepository::getById( $order_id );
 
-		if ( empty( $order ) ) {
-			yoco( Logger::class )->logError( sprintf( __( 'Failed to retrieve order (payment) of ID %s.', 'yoco_wc_payment_gateway' ), $orderId ) );
+		if ( null === $order ) {
+			yoco( Logger::class )->logError( sprintf( 'Can\'t add Payment ID Note, Failed to retrieve Woo Order #%s.', $order_id ) );
 			return;
 		}
 
-		$paymentId = yoco( Metadata::class )->getOrderPaymentId( $order );
+		$payment_id = yoco( Metadata::class )->getOrderPaymentId( $order );
 
-		if ( empty( $paymentId ) ) {
-			yoco( Logger::class )->logError( sprintf( __( 'Failed to retrieve order payment ID of ID %s.', 'yoco_wc_payment_gateway' ), $paymentId ) );
+		if ( empty( $payment_id ) ) {
+			yoco( Logger::class )->logError( sprintf( 'Can\'t add Payment ID Note, Failed to retrieve Payment ID from Woo Order #%s.', $payment_id ) );
 			return;
 		}
 
-		$this->addNote( $order, sprintf( __( 'Yoco: Received payment session ID (%s).', 'yoco_wc_payment_gateway' ), $paymentId ) );
+		// translators: Payment ID.
+		$this->addNote( $order, sprintf( esc_html__( 'Yoco: Received payment session ID (%s).', 'yoco_wc_payment_gateway' ), esc_html( $payment_id ) ) );
 	}
 
-	public function addRefundIdNoteToOrder( int $orderId ): void {
-		$order = OrdersRepository::getById( $orderId );
+	public function addRefundIdNoteToOrder( int $order_id ): void {
+		$order = OrdersRepository::getById( $order_id );
 
-		if ( empty( $order ) ) {
-			yoco( Logger::class )->logError( sprintf( __( 'Failed to retrieve order (refund) of ID %s.', 'yoco_wc_payment_gateway' ), $orderId ) );
+		if ( null === $order ) {
+			yoco( Logger::class )->logError( sprintf( 'Can\'t add Refund ID Note, Failed to retrieve Woo Order #%s.', $order_id ) );
 			return;
 		}
 
-		$refundId = yoco( Metadata::class )->getOrderRefundId( $order );
+		$refund_id = yoco( Metadata::class )->getOrderRefundId( $order );
 
-		if ( empty( $refundId ) ) {
-			yoco( Logger::class )->logError( sprintf( __( 'Failed to retrieve order refund ID of ID %s.', 'yoco_wc_payment_gateway' ), $refundId ) );
+		if ( empty( $refund_id ) ) {
+			yoco( Logger::class )->logError( sprintf( 'Can\'t add Refund ID Note, Failed to retrieve Refund ID from Woo Order #%s.', $order_id ) );
 			return;
 		}
 
-		$this->addNote( $order, sprintf( __( 'Yoco: Received refund session ID (%s).', 'yoco_wc_payment_gateway' ), $refundId ) );
+		// translators: Refund ID.
+		$this->addNote( $order, sprintf( esc_html__( 'Yoco: Received refund session ID (%s).', 'yoco_wc_payment_gateway' ), esc_html( $refund_id ) ) );
 	}
 
 	public function addNote( WC_Order $order, string $note ): int {

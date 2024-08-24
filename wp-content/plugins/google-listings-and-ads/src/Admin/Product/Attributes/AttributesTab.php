@@ -23,6 +23,7 @@ defined( 'ABSPATH' ) || exit;
 class AttributesTab implements Service, Registerable, Conditional {
 
 	use AdminConditional;
+	use AttributesTrait;
 
 	/**
 	 * @var Admin
@@ -93,7 +94,7 @@ class AttributesTab implements Service, Registerable, Conditional {
 	}
 
 	/**
-	 * Adds the Google Listing & Ads tab to the WooCommerce product data box.
+	 * Adds the Google for WooCommerce tab to the WooCommerce product data box.
 	 *
 	 * @param array $tabs The current product data tabs.
 	 *
@@ -101,7 +102,7 @@ class AttributesTab implements Service, Registerable, Conditional {
 	 */
 	private function add_tab( array $tabs ): array {
 		$tabs['gla_attributes'] = [
-			'label'  => 'Google Listings and Ads',
+			'label'  => 'Google for WooCommerce',
 			'class'  => 'gla',
 			'target' => 'gla_attributes',
 		];
@@ -163,15 +164,6 @@ class AttributesTab implements Service, Registerable, Conditional {
 		$form->set_name( 'attributes' );
 
 		return $form;
-	}
-
-	/**
-	 * Return an array of WooCommerce product types that the Google Listings and Ads tab can be displayed for.
-	 *
-	 * @return array of WooCommerce product types (e.g. 'simple', 'variable', etc.)
-	 */
-	protected function get_applicable_product_types(): array {
-		return apply_filters( 'woocommerce_gla_attributes_tab_applicable_product_types', [ 'simple', 'variable' ] );
 	}
 
 	/**

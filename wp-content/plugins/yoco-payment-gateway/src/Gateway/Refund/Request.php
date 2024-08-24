@@ -3,9 +3,7 @@
 namespace Yoco\Gateway\Refund;
 
 use WC_Order;
-use Yoco\Gateway\Gateway;
 use Yoco\Gateway\Metadata;
-use Yoco\Gateway\Provider;
 use Yoco\Helpers\Http\Client;
 use Yoco\Installation\Installation;
 
@@ -15,13 +13,10 @@ class Request {
 
 	private ?WC_Order $order = null;
 
-	private ?Gateway $gateway = null;
-
 	private ?Installation $installation = null;
 
 	public function __construct( WC_Order $order ) {
 		$this->order        = $order;
-		$this->gateway      = yoco( Provider::class )->getInstance();
 		$this->installation = yoco( Installation::class );
 	}
 
@@ -43,7 +38,7 @@ class Request {
 	}
 
 	private function getUrl(): string {
-		$url = $this->gateway->credentials->getCheckoutApiUrl();
+		$url = $this->installation->getCheckoutApiUrl();
 
 		return trailingslashit( $url ) . $this->getCheckoutId() . '/refund';
 	}

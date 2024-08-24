@@ -4,6 +4,7 @@ namespace Yoco\Integrations\Yoco\Webhooks\REST;
 
 use ReflectionClass;
 use Yoco\Integrations\Yoco\Webhooks\REST\Routes\Webhook;
+use Yoco\Helpers\Logs;
 
 class Router {
 
@@ -12,6 +13,7 @@ class Router {
 	public function __construct() {
 		$this->routes = array(
 			'webhook' => Webhook::class,
+			'logs'    => Logs::class,
 		);
 
 		add_action( 'rest_api_init', array( $this, 'init' ), 11 );

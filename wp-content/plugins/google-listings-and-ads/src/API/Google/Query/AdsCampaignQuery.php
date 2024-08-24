@@ -12,10 +12,15 @@ defined( 'ABSPATH' ) || exit;
  */
 class AdsCampaignQuery extends AdsQuery {
 
+	use ReportQueryTrait;
+
+
 	/**
 	 * Query constructor.
+	 *
+	 * @param array $args Query arguments.
 	 */
-	public function __construct() {
+	public function __construct( $args = [] ) {
 		parent::__construct( 'campaign' );
 		$this->columns(
 			[
@@ -23,9 +28,11 @@ class AdsCampaignQuery extends AdsQuery {
 				'campaign.name',
 				'campaign.status',
 				'campaign.advertising_channel_type',
-				'campaign.shopping_setting.sales_country',
+				'campaign.shopping_setting.feed_label',
 				'campaign_budget.amount_micros',
 			]
 		);
+
+		$this->handle_query_args( $args );
 	}
 }

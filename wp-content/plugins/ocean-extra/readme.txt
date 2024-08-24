@@ -2,11 +2,27 @@
 Contributors: oceanwp, apprimit, wpfleek
 Tags: widgets, meta box, metaboxes, metabox, oceanwp
 Requires at least: 5.6
-Tested up to: 6.4.1
-Stable tag: 2.2.3
-Requires PHP: 7.2
+Tested up to: 6.5.5
+Stable tag: 2.3.0
+Requires PHP: 7.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
+
+== Copyright ==
+
+Ocean Extra uses the following third-party resources:
+
+Font Awesome Fonts, Copyright Fonticons, Inc.
+License: SIL OFL 1.1 License - https://scripts.sil.org/OFL
+Source: https://fontawesome.com/
+
+Font Awesome Icons, Copyright Fonticons, Inc.
+License: CC BY 4.0 License - https://creativecommons.org/licenses/by/4.0/
+Source: https://fontawesome.com/
+
+Font Awesome Code, Copyright Fonticons, Inc.
+License: MIT License - https://opensource.org/licenses/MIT
+Source: https://fontawesome.com/
 
 == Description ==
 
@@ -199,6 +215,42 @@ You can report problems on [this support forum](https://wordpress.org/support/pl
 11. WordPress Menu icons support feature, various icon libraries support.
 
 == Changelog ==
+
+= 2.3.0 - JUL 03 2024 =
+- Fixed: Potential vulnerability patched: Report by Patchstack from June 25th 2024.
+Updated: WordPress version for compatibility.
+
+= 2.2.9 - JUN 05 2024 =
+- Fixed: Potential vulnerability patched: Wordfence report from Jun 3rd 2024. A special thanks goes towards the Wordfence team for doublechecking everything as always.
+- Fixed: WordPress Widgets: Flickr: if widget in use more than once on a page, images display with a single widget only.
+- Fixed: Customizer: Console error while Customizer in use: Store "core / interface" is already registered.
+
+= 2.2.8 - MAY 22 2024 =
+- Added: Additional support for the oceanwp_post_id() function.
+- Added: Support for new functionality for Ocean Hooks 2.1.1 version.
+- Updated: Freemius SDK to 2.7.2 version.
+- Updated: Compatibility: WordPress version.
+
+= 2.2.7 - APR 08 2024 =
+- Fixed: Potential vulnerability patched: Wordfence report from Apr 3rd 2024. A special thanks goes towards the Wordfence team for doublechecking everything as always.
+
+= 2.2.6 - MAR 12 2024 =
+- Added: Shortcode: [oceanwp_icon]: New shortcode parameter "location" to differentiate the use of specific icon libraries.  https://docs.oceanwp.org/article/779-oceanwp-icon-shortcode
+- Fixed: Theme: Lightbox feature remains enabled on Gutenberg Gallery block even if disabled via Customize > General Options > Performance. Requires the latest version of the OceanWP theme.
+
+= 2.2.5 - FEB 14 2024 =
+- Improved: Metabox Settings: Conditional logic for backend asset loading.
+- Fixed: PHP Warning: in_array() expects parameter 2 to be array, null given in .../ocean-extra/includes/post-settings/post-settings.php on line 134
+- Fixed: Potential vulnerability patched. Report by Wordfence from Feb 6th 2024.
+
+= 2.2.4 - DEC 11 2023 =
+- Updated: Font Awesome Library to 6.5.1 version.
+- Updated: Woo Fragments function: Check Woo Cart Total and Woo Cart Items Count.
+- Fixed: Missing Dependencies: oceanwp-butterbean script.
+- Fixed: Load Google Fonts Locally: incorrect check on default state.
+- Fixed: Shortcode: oceanwp_breadcrumbs: JSON error on saving when shortcode in use.
+- Fixed: Shortcode: oceanwp_woo_cart: JSON error on saving when shortcode in use.
+- Deprecated: Google+ social option from related custom OceanWP legacy WordPress widgets.
 
 = 2.2.3 - NOV 27 2023 =
 - Fixed: Potential vulnerability patched. Report by Patchstack from Nov 23rd 2023.

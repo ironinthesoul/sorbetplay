@@ -2,7 +2,6 @@
 
 namespace Yoco\Gateway\Processors;
 
-use Exception;
 use WC_Order;
 use WP_Error;
 use Yoco\Gateway\Refund\Request;
@@ -41,7 +40,7 @@ class RefundProcessor {
 
 			return new WP_Error( 200, $response['body']['message'] ?? '' );
 		} catch ( \Throwable $th ) {
-			yoco( Logger::class )->logError( sprintf( __( 'Yoco: ERROR: Failed to request for refund: "%s".', 'yoco_wc_payment_gateway' ), $th->getMessage() ) );
+			yoco( Logger::class )->logError( sprintf( 'Yoco: ERROR: Failed to request for refund: "%s".', $th->getMessage() ) );
 
 			return new WP_Error( $th->getCode(), $th->getMessage() );
 		}

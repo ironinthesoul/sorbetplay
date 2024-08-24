@@ -47,7 +47,7 @@ class WebhookController {
 
 			return $processor->process( $payload );
 		} catch ( \Throwable $th ) {
-			yoco( Logger::class )->logError( sprintf( __( 'Failed to handle webhook post request. %s', 'yoco_wc_payment_gateway' ), $th->getMessage() ) );
+			yoco( Logger::class )->logError( sprintf( 'Failed to handle webhook post request. %s', $th->getMessage() ) );
 
 			return new WP_REST_Response(
 				array(

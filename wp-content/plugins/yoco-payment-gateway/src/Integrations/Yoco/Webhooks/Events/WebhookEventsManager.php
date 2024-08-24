@@ -47,7 +47,7 @@ class WebhookEventsManager {
 	public function getEventProcessor( string $eventType ): WebhookProcessor {
 		// TODO: CP: Confirm whether we should throw an error if we do not recognise the event type?
 		if ( ! array_key_exists( $eventType, $this->eventsProcessors ) ) {
-			yoco( Logger::class )->logError( sprintf( __( 'Unknown event type to process: %s.', 'yoco_wc_payment_gateway' ), $eventType ) );
+			yoco( Logger::class )->logError( sprintf( 'Unknown event type to process: %s.', $eventType ) );
 			throw new Error( sprintf( __( 'Unknown event type to process: %s.', 'yoco_wc_payment_gateway' ), $eventType ) );
 		}
 
@@ -57,7 +57,7 @@ class WebhookEventsManager {
 	public function getEventParser( string $eventType ): WebhookPayloadParser {
 		// TODO: CP: Confirm whether we should throw an error if we do not recognise the event type?
 		if ( ! array_key_exists( $eventType, $this->eventsParsers ) ) {
-			yoco( Logger::class )->logError( sprintf( __( 'Unknown event type to parse: %s.', 'yoco_wc_payment_gateway' ), $eventType ) );
+			yoco( Logger::class )->logError( sprintf( 'Unknown event type to parse: %s.', $eventType ) );
 			throw new Error( sprintf( __( 'Unknown event type to parse: %s.', 'yoco_wc_payment_gateway' ), $eventType ) );
 		}
 

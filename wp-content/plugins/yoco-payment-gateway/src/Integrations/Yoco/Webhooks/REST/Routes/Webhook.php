@@ -27,10 +27,12 @@ class Webhook extends Route implements RouteInterface {
 	}
 
 	public function callback( WP_REST_Request $request ): WP_REST_Response {
-		return ( new WebhookController( $request ) )->handleRequest();
+		return wp_salt() === json_decode( $request->get_body() )
+			? new WP_REST_Response( 'OK', 200 )
+			: ( new WebhookController( $request ) )->handleRequest();
 	}
 
 	public function permit( WP_REST_Request $request ): bool {
-		return yoco( Guard::class )->verifySignature( $request );
+		return wp_salt() === json_decode( $request->get_body() ) ? true : yoco( Guard::class )->verifySignature( $request );
 	}
 }

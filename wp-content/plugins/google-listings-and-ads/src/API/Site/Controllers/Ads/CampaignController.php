@@ -99,15 +99,33 @@ class CampaignController extends BaseController implements GoogleHelperAwareInte
 	protected function get_campaigns_callback(): callable {
 		return function ( Request $request ) {
 			try {
-				$exclude_removed = $request->get_param( 'exclude_removed' );
+				$exclude_removed          = $request->get_param( 'exclude_removed' );
+				$return_pagination_params = true;
+				$campaign_data            = $this->ads_campaign->get_campaigns( $exclude_removed, true, $request->get_params(), $return_pagination_params );
 
-				return array_map(
+				$campaigns = array_map(
 					function ( $campaign ) use ( $request ) {
 						$data = $this->prepare_item_for_response( $campaign, $request );
 						return $this->prepare_response_for_collection( $data );
 					},
-					$this->ads_campaign->get_campaigns( $exclude_removed )
+					$campaign_data['campaigns']
 				);
+
+				$response = rest_ensure_response( $campaigns );
+
+				$total_campaigns = (int) $campaign_data['total_results'];
+				$response->header( 'X-WP-Total', $total_campaigns );
+				// If per_page is not set, then set it to total number of campaigns.
+				$per_page  = $request->get_param( 'per_page' ) ?: $total_campaigns;
+				$max_pages = $per_page > 0 ? ceil( $total_campaigns / $per_page ) : 1;
+				$response->header( 'X-WP-TotalPages', (int) $max_pages );
+
+				if ( ! empty( $campaign_data['next_page_token'] ) ) {
+					$response->header( 'X-GLA-NextPageToken', $campaign_data['next_page_token'] );
+				}
+
+				return $response;
+
 			} catch ( Exception $e ) {
 				return $this->response_from_exception( $e );
 			}
@@ -135,6 +153,32 @@ class CampaignController extends BaseController implements GoogleHelperAwareInte
 				}
 
 				$campaign = $this->ads_campaign->create_campaign( $fields );
+
+				/**
+				 * When a campaign has been successfully created.
+				 *
+				 * @event gla_created_campaign
+				 * @property int    id                 Campaign ID.
+				 * @property string status             Campaign status, `enabled` or `paused`.
+				 * @property string name               Campaign name, generated based on date.
+				 * @property float  amount             Campaign budget.
+				 * @property string country            Base target country code.
+				 * @property string targeted_locations Additional target country codes.
+				 * @property string source             The source of the campaign creation.
+				 */
+				do_action(
+					'woocommerce_gla_track_event',
+					'created_campaign',
+					[
+						'id'                 => $campaign['id'],
+						'status'             => $campaign['status'],
+						'name'               => $campaign['name'],
+						'amount'             => $campaign['amount'],
+						'country'            => $campaign['country'],
+						'targeted_locations' => join( ',', $campaign['targeted_locations'] ),
+						'source'             => $fields['label'] ?? '',
+					]
+				);
 
 				return $this->prepare_item_for_response( $campaign, $request );
 			} catch ( Exception $e ) {
@@ -192,6 +236,26 @@ class CampaignController extends BaseController implements GoogleHelperAwareInte
 
 				$campaign_id = $this->ads_campaign->edit_campaign( absint( $request['id'] ), $fields );
 
+				/**
+				 * When a campaign has been successfully edited.
+				 *
+				 * @event gla_edited_campaign
+				 * @property int    id     Campaign ID.
+				 * @property string status Campaign status, `enabled` or `paused`.
+				 * @property string name   Campaign name, generated based on date.
+				 * @property float  amount Campaign budget.
+				 */
+				do_action(
+					'woocommerce_gla_track_event',
+					'edited_campaign',
+					array_merge(
+						[
+							'id' => $campaign_id,
+						],
+						$fields,
+					)
+				);
+
 				return [
 					'status'  => 'success',
 					'message' => __( 'Successfully edited campaign.', 'google-listings-and-ads' ),
@@ -212,6 +276,20 @@ class CampaignController extends BaseController implements GoogleHelperAwareInte
 		return function ( Request $request ) {
 			try {
 				$deleted_id = $this->ads_campaign->delete_campaign( absint( $request['id'] ) );
+
+				/**
+				 * When a campaign has been successfully deleted.
+				 *
+				 * @event gla_deleted_campaign
+				 * @property int id Campaign ID.
+				 */
+				do_action(
+					'woocommerce_gla_track_event',
+					'deleted_campaign',
+					[
+						'id' => $deleted_id,
+					]
+				);
 
 				return [
 					'status'  => 'success',
@@ -260,6 +338,14 @@ class CampaignController extends BaseController implements GoogleHelperAwareInte
 				'description'       => __( 'Exclude removed campaigns.', 'google-listings-and-ads' ),
 				'type'              => 'boolean',
 				'default'           => true,
+				'validate_callback' => 'rest_validate_request_arg',
+			],
+			'per_page'        => [
+				'description'       => __( 'Maximum number of rows to be returned in result data.', 'google-listings-and-ads' ),
+				'type'              => 'integer',
+				'minimum'           => 1,
+				'maximum'           => 1000,
+				'sanitize_callback' => 'absint',
 				'validate_callback' => 'rest_validate_request_arg',
 			],
 		];
@@ -325,6 +411,14 @@ class CampaignController extends BaseController implements GoogleHelperAwareInte
 				'items'             => [
 					'type' => 'string',
 				],
+			],
+			'label'              => [
+				'type'              => 'string',
+				'description'       => __( 'The name of the label to assign to the campaign.', 'google-listings-and-ads' ),
+				'context'           => [ 'edit' ],
+				'validate_callback' => 'rest_validate_request_arg',
+				'required'          => false,
+
 			],
 		];
 	}

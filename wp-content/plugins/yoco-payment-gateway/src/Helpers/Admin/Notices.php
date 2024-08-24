@@ -55,7 +55,7 @@ class Notices {
 			'admin_notices',
 			function () use ( $type, $prefix, $message ) {
 				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-				echo '<div class="notice ', esc_html( $type ), ' is-dismissible"><p><b>', esc_html( $prefix ), ':</b> ', force_balance_tags( $message ), '</p></div>';
+				echo '<div class="yoco-notice notice ', esc_html( $type ), ' is-dismissible"><p><b>', esc_html( $prefix ), ':</b> ', force_balance_tags( $message ), '</p></div>';
 			}
 		);
 	}

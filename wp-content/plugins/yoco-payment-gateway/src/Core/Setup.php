@@ -11,10 +11,13 @@ use Yoco\Installation\Installation;
 
 use function Yoco\yoco;
 
+/**
+ * Setup class.
+ */
 class Setup {
 
 	public function __construct() {
-		add_action( 'admin_init', array( $this, 'maybe_deactivate_on_incompatible_env' ) );
+		add_action( 'woocommerce_init', array( $this, 'maybe_deactivate_on_incompatible_env' ) );
 	}
 
 	public function maybe_deactivate_on_incompatible_env(): void {
@@ -32,10 +35,12 @@ class Setup {
 	public function deactivateOnIncompatibileEnv(): bool {
 
 		if ( ! yoco( SSL::class )->isSecure() ) {
-			$env_data = $this->getEnvironmentData( array( 'HTTPS', 'REQUEST_SCHEME', 'SERVER_PORT', 'HTTP_HOST', 'REQUEST_URI' ) );
 			$this->deactivateAsIncompatibileEnv(
-				__( 'Error: plugin suspended due to SSL certificate issue. Possible reasons for this suspension: SSL Certificate Expiry, Insecure SSL Configuration or SSL Handshake Failure.', 'yoco_wc_payment_gateway' ),
-				$env_data
+				'Error: plugin temporary suspended due to SSL certificate issue. Possible reasons for this suspension: SSL Certificate Expiry, Insecure SSL Configuration or SSL Handshake Failure.',
+				$this->getEnvironmentData( array( 'HTTPS', 'REQUEST_SCHEME', 'SERVER_PORT', 'HTTP_HOST', 'REQUEST_URI' ) ),
+				array(
+					'source' => 'yoco-gateway-v' . YOCO_PLUGIN_VERSION . '-ssl-error-' . yoco( Installation::class )->getMode() . '_mode',
+				)
 			);
 			return false;
 		}
@@ -117,7 +122,7 @@ class Setup {
 		return true;
 	}
 
-	private function deactivateAsIncompatibileEnv( string $message = '', $env_data = '' ): void {
+	private function deactivateAsIncompatibileEnv( string $message = '', $env_data = '', array $context = array() ): void {
 		static $errors;
 
 		$index = md5( $message );
@@ -130,7 +135,7 @@ class Setup {
 			$errors[ $index ] = true;
 		}
 		$env_data = $env_data ? "\n" . $env_data : '';
-		yoco( Logger::class )->logError( wp_strip_all_tags( $message ) . $env_data );
+		yoco( Logger::class )->logError( wp_strip_all_tags( $message ) . $env_data, $context );
 		yoco( Notices::class )->renderNotice( 'error', $message );
 	}
 

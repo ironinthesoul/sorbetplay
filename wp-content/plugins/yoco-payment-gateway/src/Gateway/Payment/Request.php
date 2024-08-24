@@ -3,8 +3,7 @@
 namespace Yoco\Gateway\Payment;
 
 use WC_Order;
-use Yoco\Gateway\Gateway;
-use Yoco\Gateway\Provider;
+use Yoco\Gateway\Metadata;
 use Yoco\Helpers\Http\Client;
 use Yoco\Installation\Installation;
 use Yoco\Integrations\Yoco\Requests\Checkout;
@@ -15,13 +14,10 @@ class Request {
 
 	private ?WC_Order $order = null;
 
-	private ?Gateway $gateway = null;
-
 	private ?Installation $installation = null;
 
 	public function __construct( WC_Order $order ) {
 		$this->order        = $order;
-		$this->gateway      = yoco( Provider::class )->getInstance();
 		$this->installation = yoco( Installation::class );
 	}
 
@@ -38,8 +34,20 @@ class Request {
 		}
 	}
 
+	public function get(): array {
+		try {
+			$client = new Client();
+			$url    = $this->getUrl() . '/' . yoco( Metadata::class )->getOrderCheckoutId( $this->order );
+			$args   = array( 'headers' => $this->getHeadersForMode() );
+
+			return $client->get( $url, $args );
+		} catch ( \Throwable $th ) {
+			throw $th;
+		}
+	}
+
 	private function getUrl(): string {
-		return $this->gateway->credentials->getCheckoutApiUrl();
+		return $this->installation->getCheckoutApiUrl();
 	}
 
 	private function getArgs(): array {
@@ -49,10 +57,21 @@ class Request {
 		);
 	}
 
-	private function getHeaders() {
+	public function getHeaders() {
 		$headers = array(
 			'Content-Type'  => 'application/json',
 			'Authorization' => $this->installation->getApiBearer(),
+			'X-Product'     => 'woocommerce',
+		);
+
+		return apply_filters( 'yoco_payment_gateway/payment/request/headers', $headers );
+	}
+
+	public function getHeadersForMode() {
+
+		$headers = array(
+			'Content-Type'  => 'application/json',
+			'Authorization' => $this->installation->getApiBearer( $this->order->get_meta( 'yoco_order_payment_mode', true ) ),
 			'X-Product'     => 'woocommerce',
 		);
 

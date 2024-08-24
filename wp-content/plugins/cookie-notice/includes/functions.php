@@ -63,12 +63,12 @@ function cn_get_active_caching_plugins( $args = [] ) {
 			$active_plugins[] = 'LiteSpeed Cache';
 	}
 
-	// siteground optimizer 5.5.0+
-	if ( cn_is_plugin_active( 'sgoptimizer' ) ) {
+	// speed optimizer 5.5.0+
+	if ( cn_is_plugin_active( 'speedoptimizer' ) ) {
 		if ( $version )
-			$active_plugins['SiteGround Optimizer'] = '5.5.0';
+			$active_plugins['Speed Optimizer'] = '5.5.0';
 		else
-			$active_plugins[] = 'SiteGround Optimizer';
+			$active_plugins[] = 'Speed Optimizer';
 	}
 
 	// wp fastest cache 1.0.0+
@@ -87,12 +87,36 @@ function cn_get_active_caching_plugins( $args = [] ) {
 			$active_plugins[] = 'WP Rocket';
 	}
 
+	// hummingbird 2.1.0+
+	if ( cn_is_plugin_active( 'hummingbird' ) ) {
+		if ( $version )
+			$active_plugins['Hummingbird'] = '2.1.0';
+		else
+			$active_plugins[] = 'Hummingbird';
+	}
+
 	// wp super cache 1.6.9+
 	if ( cn_is_plugin_active( 'wpsupercache' ) ) {
 		if ( $version )
 			$active_plugins['WP Super Cache'] = '1.6.9';
 		else
 			$active_plugins[] = 'WP Super Cache';
+	}
+
+	// breeze 1.1.0+
+	if ( cn_is_plugin_active( 'breeze' ) ) {
+		if ( $version )
+			$active_plugins['Breeze'] = '1.1.0';
+		else
+			$active_plugins[] = 'Breeze';
+	}
+
+	// speedycache 1.0.0+
+	if ( cn_is_plugin_active( 'speedycache' ) ) {
+		if ( $version )
+			$active_plugins['SpeedyCache'] = '1.0.0';
+		else
+			$active_plugins[] = 'SpeedyCache';
 	}
 
 	return $active_plugins;
@@ -108,7 +132,7 @@ function cn_get_active_caching_plugins( $args = [] ) {
  */
 function cn_is_plugin_active( $plugin = '' ) {
 	// no valid plugin?
-	if ( ! in_array( $plugin, [ 'autoptimize', 'wpoptimize', 'litespeed', 'sgoptimizer', 'wpfastestcache', 'wprocket', 'wpsupercache', 'contactform7', 'elementor', 'amp' ], true ) )
+	if ( ! in_array( $plugin, [ 'autoptimize', 'wpoptimize', 'litespeed', 'speedoptimizer', 'wpfastestcache', 'wprocket', 'wpsupercache', 'contactform7', 'elementor', 'amp', 'hummingbird', 'breeze', 'speedycache' ], true ) )
 		return false;
 
 	// set default flag
@@ -133,8 +157,8 @@ function cn_is_plugin_active( $plugin = '' ) {
 				$is_plugin_active = true;
 			break;
 
-		// siteground optimizer 5.5.0+
-		case 'sgoptimizer':
+		// speed optimizer 5.5.0+
+		case 'speedoptimizer':
 			global $siteground_optimizer_loader;
 
 			if ( ! empty( $siteground_optimizer_loader ) && is_object( $siteground_optimizer_loader ) && is_a( $siteground_optimizer_loader, 'SiteGround_Optimizer\Loader\Loader' ) && defined( '\SiteGround_Optimizer\VERSION' ) && version_compare( \SiteGround_Optimizer\VERSION, '5.5', '>=' ) )
@@ -176,6 +200,24 @@ function cn_is_plugin_active( $plugin = '' ) {
 		// amp 2.0.0+
 		case 'amp':
 			if ( function_exists( 'amp_is_enabled' ) && defined( 'AMP__VERSION' ) && version_compare( AMP__VERSION, '2.0', '>=' ) )
+				$is_plugin_active = true;
+			break;
+
+		// hummingbird 2.1.0+
+		case 'hummingbird':
+			if ( class_exists( 'Hummingbird\\WP_Hummingbird' ) && defined( 'WPHB_VERSION' ) && version_compare( WPHB_VERSION, '2.1.0', '>=' ) )
+				$is_plugin_active = true;
+			break;
+
+		// breeze 1.1.0+
+		case 'breeze':
+			if ( class_exists( 'Breeze_PurgeCache' ) && class_exists( 'Breeze_Options_Reader' ) && function_exists( 'breeze_get_option' ) && function_exists( 'breeze_update_option' ) && defined( 'BREEZE_VERSION' ) && version_compare( BREEZE_VERSION, '1.1.0', '>=' ) )
+				$is_plugin_active = true;
+			break;
+
+		// speedycache 1.0.0+
+		case 'speedycache':
+			if ( class_exists( 'SpeedyCache' ) && defined( 'SPEEDYCACHE_VERSION' ) && function_exists( 'speedycache_delete_cache' ) && version_compare( SPEEDYCACHE_VERSION, '1.0.0', '>=' ) )
 				$is_plugin_active = true;
 			break;
 	}

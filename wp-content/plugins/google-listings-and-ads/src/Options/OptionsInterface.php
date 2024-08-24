@@ -13,6 +13,7 @@ use Automattic\WooCommerce\GoogleListingsAndAds\Value\PositiveInteger;
 interface OptionsInterface {
 
 	public const ADS_ACCOUNT_CURRENCY                      = 'ads_account_currency';
+	public const ADS_ACCOUNT_OCID                          = 'ads_account_ocid';
 	public const ADS_ACCOUNT_STATE                         = 'ads_account_state';
 	public const ADS_BILLING_URL                           = 'ads_billing_url';
 	public const ADS_ID                                    = 'ads_id';
@@ -25,6 +26,7 @@ interface OptionsInterface {
 	public const DB_VERSION                                = 'db_version';
 	public const FILE_VERSION                              = 'file_version';
 	public const GOOGLE_CONNECTED                          = 'google_connected';
+	public const GOOGLE_WPCOM_AUTH_NONCE                   = 'google_wpcom_auth_nonce';
 	public const INSTALL_TIMESTAMP                         = 'install_timestamp';
 	public const JETPACK_CONNECTED                         = 'jetpack_connected';
 	public const MC_SETUP_COMPLETED_AT                     = 'mc_setup_completed_at';
@@ -37,13 +39,16 @@ interface OptionsInterface {
 	public const SITE_VERIFICATION                         = 'site_verification';
 	public const SYNCABLE_PRODUCTS_COUNT                   = 'syncable_products_count';
 	public const SYNCABLE_PRODUCTS_COUNT_INTERMEDIATE_DATA = 'syncable_products_count_intermediate_data';
+	public const PRODUCT_STATUSES_COUNT_INTERMEDIATE_DATA  = 'product_statuses_count_intermediate_data';
 	public const TARGET_AUDIENCE                           = 'target_audience';
 	public const TOURS                                     = 'tours';
 	public const UPDATE_ALL_PRODUCTS_LAST_SYNC             = 'update_all_products_last_sync';
 	public const WP_TOS_ACCEPTED                           = 'wp_tos_accepted';
+	public const WPCOM_REST_API_STATUS                     = 'wpcom_rest_api_status';
 
 	public const VALID_OPTIONS = [
 		self::ADS_ACCOUNT_CURRENCY                      => true,
+		self::ADS_ACCOUNT_OCID                          => true,
 		self::ADS_ACCOUNT_STATE                         => true,
 		self::ADS_BILLING_URL                           => true,
 		self::ADS_ID                                    => true,
@@ -68,10 +73,13 @@ interface OptionsInterface {
 		self::SITE_VERIFICATION                         => true,
 		self::SYNCABLE_PRODUCTS_COUNT                   => true,
 		self::SYNCABLE_PRODUCTS_COUNT_INTERMEDIATE_DATA => true,
+		self::PRODUCT_STATUSES_COUNT_INTERMEDIATE_DATA  => true,
 		self::TARGET_AUDIENCE                           => true,
 		self::TOURS                                     => true,
 		self::UPDATE_ALL_PRODUCTS_LAST_SYNC             => true,
 		self::WP_TOS_ACCEPTED                           => true,
+		self::WPCOM_REST_API_STATUS                     => true,
+		self::GOOGLE_WPCOM_AUTH_NONCE                   => true,
 	];
 
 	public const OPTION_TYPES = [
@@ -138,4 +146,11 @@ interface OptionsInterface {
 	 * @return int
 	 */
 	public function get_ads_id(): int;
+
+	/**
+	 * If the WPCOM API is authorized
+	 *
+	 * @return bool
+	 */
+	public function is_wpcom_api_authorized(): bool;
 }

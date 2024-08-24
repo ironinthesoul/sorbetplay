@@ -17,6 +17,7 @@ use Yoco\Gateway\Checkout\Availability;
 use Yoco\Gateway\Checkout\Method;
 use Yoco\Gateway\Notes;
 use Yoco\Gateway\Metadata;
+use Yoco\Gateway\PaymentStatusScheduler;
 use Yoco\Gateway\Order;
 use Yoco\Gateway\Provider;
 use Yoco\Gateway\Settings;
@@ -96,6 +97,8 @@ final class Init extends Singleton {
 		$this->bindPrivate( Dependencies::class );
 		// $this->bindPrivate(Language::class);
 		$this->bindPrivate( Actions::class );
+
+		$this->bindPublic( PaymentStatusScheduler::class );
 	}
 
 	private function bindPublic( string $class, array $args = array() ): void {

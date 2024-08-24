@@ -42,6 +42,12 @@ Use the built-in continuous integration in GitLab.
 - [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
 - [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
 
+### Updating the version
+To update version, update it in the:
+- [package.json](package.json)
+- [readme.txt](readme.txt)
+- [yoco_wc_payment_gateway.php](yoco_wc_payment_gateway.php)
+
 ***
 
 # Editing this README

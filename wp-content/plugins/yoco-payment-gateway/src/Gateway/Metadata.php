@@ -11,6 +11,8 @@ class Metadata {
 
 	public const CHECKOUT_URL_ORDER_META_KEY = 'yoco_order_checkout_url';
 
+	public const CHECKOUT_MODE_ORDER_META_KEY = 'yoco_order_checkout_mode';
+
 	public const PAYMENT_ID_ORDER_META_KEY = 'yoco_order_payment_id';
 
 	public const REFUND_ID_ORDER_META_KEY = 'yoco_order_refund_id';
@@ -23,6 +25,7 @@ class Metadata {
 
 	public function updateOrderCheckoutMeta( WC_Order $order, array $data ): void {
 		$this->updateOrderMeta( $order, self::CHECKOUT_ID_ORDER_META_KEY, $data['id'] );
+		$this->updateOrderMeta( $order, self::CHECKOUT_MODE_ORDER_META_KEY, $data['processingMode'] );
 		$this->updateOrderMeta( $order, self::CHECKOUT_URL_ORDER_META_KEY, $data['redirectUrl'] );
 	}
 
@@ -53,13 +56,13 @@ class Metadata {
 	public function updateOrderMeta( WC_Order $order, string $key, string $value ): void {
 		$order->update_meta_data( $key, $value );
 		$order->save_meta_data();
-		$action = false !== $order->get_meta( $key ) ? 'updated_successfully' : 'updated_unsuccessfully';
+		$action = ! empty( $this->getOrderMeta( $order, $key ) ) ? 'updated_successfully' : 'updated_unsuccessfully';
 
 		do_action( "yoco_payment_gateway/order/meta/{$key}/{$action}", $order->get_id() );
 	}
 
 	public function getOrderMeta( WC_Order $order, string $key ): string {
-		$meta = $order->get_meta( $key );
+		$meta = $order->get_meta( $key, true, 'yoco' );
 
 		return is_string( $meta ) ? $meta : '';
 	}

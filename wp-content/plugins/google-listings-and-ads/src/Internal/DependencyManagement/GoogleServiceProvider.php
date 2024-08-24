@@ -9,6 +9,7 @@ use Automattic\WooCommerce\GoogleListingsAndAds\API\Google\AdsAssetGroup;
 use Automattic\WooCommerce\GoogleListingsAndAds\API\Google\AdsCampaign;
 use Automattic\WooCommerce\GoogleListingsAndAds\API\Google\AdsCampaignBudget;
 use Automattic\WooCommerce\GoogleListingsAndAds\API\Google\AdsCampaignCriterion;
+use Automattic\WooCommerce\GoogleListingsAndAds\API\Google\AdsCampaignLabel;
 use Automattic\WooCommerce\GoogleListingsAndAds\API\Google\AdsConversionAction;
 use Automattic\WooCommerce\GoogleListingsAndAds\API\Google\AdsReport;
 use Automattic\WooCommerce\GoogleListingsAndAds\API\Google\AdsAssetGroupAsset;
@@ -46,7 +47,7 @@ use Automattic\WooCommerce\GoogleListingsAndAds\Vendor\League\Container\Definiti
 use Automattic\WooCommerce\GoogleListingsAndAds\Vendor\Psr\Container\ContainerInterface;
 use Automattic\WooCommerce\GoogleListingsAndAds\Vendor\Psr\Http\Message\RequestInterface;
 use Automattic\WooCommerce\GoogleListingsAndAds\Vendor\Psr\Http\Message\ResponseInterface;
-use Google\Ads\GoogleAds\Util\V14\GoogleAdsFailures;
+use Google\Ads\GoogleAds\Util\V16\GoogleAdsFailures;
 use Jetpack_Options;
 
 defined( 'ABSPATH' ) || exit;
@@ -80,6 +81,7 @@ class GoogleServiceProvider extends AbstractServiceProvider {
 		AdsAssetGroup::class          => true,
 		AdsCampaign::class            => true,
 		AdsCampaignBudget::class      => true,
+		AdsCampaignLabel::class       => true,
 		AdsConversionAction::class    => true,
 		AdsReport::class              => true,
 		AdsAssetGroupAsset::class     => true,
@@ -109,11 +111,12 @@ class GoogleServiceProvider extends AbstractServiceProvider {
 
 		$this->share( Ads::class, GoogleAdsClient::class );
 		$this->share( AdsAssetGroup::class, GoogleAdsClient::class, AdsAssetGroupAsset::class );
-		$this->share( AdsCampaign::class, GoogleAdsClient::class, AdsCampaignBudget::class, AdsCampaignCriterion::class, GoogleHelper::class );
+		$this->share( AdsCampaign::class, GoogleAdsClient::class, AdsCampaignBudget::class, AdsCampaignCriterion::class, GoogleHelper::class, AdsCampaignLabel::class );
 		$this->share( AdsCampaignBudget::class, GoogleAdsClient::class );
 		$this->share( AdsAssetGroupAsset::class, GoogleAdsClient::class, AdsAsset::class );
 		$this->share( AdsAsset::class, GoogleAdsClient::class, WP::class );
 		$this->share( AdsCampaignCriterion::class );
+		$this->share( AdsCampaignLabel::class, GoogleAdsClient::class );
 		$this->share( AdsConversionAction::class, GoogleAdsClient::class );
 		$this->share( AdsReport::class, GoogleAdsClient::class );
 
@@ -134,12 +137,12 @@ class GoogleServiceProvider extends AbstractServiceProvider {
 			$handler_stack = HandlerStack::create();
 			$handler_stack->remove( 'http_errors' );
 			$handler_stack->push( $this->error_handler(), 'http_errors' );
-			$handler_stack->push( $this->add_auth_header() );
+			$handler_stack->push( $this->add_auth_header(), 'auth_header' );
 			$handler_stack->push( $this->add_plugin_version_header(), 'plugin_version_header' );
 
 			// Override endpoint URL if we are using http locally.
 			if ( 0 === strpos( $this->get_connect_server_url_root()->getValue(), 'http://' ) ) {
-				$handler_stack->push( $this->override_http_url() );
+				$handler_stack->push( $this->override_http_url(), 'override_http_url' );
 			}
 
 			return new GuzzleClient( [ 'handler' => $handler_stack ] );
@@ -228,17 +231,24 @@ class GoogleServiceProvider extends AbstractServiceProvider {
 	 * @throws AccountReconnect When an account must be reconnected.
 	 */
 	protected function handle_unauthorized_error( RequestInterface $request, ResponseInterface $response ) {
-		// Log original exception before throwing reconnect exception.
-		do_action( 'woocommerce_gla_exception', RequestException::create( $request, $response ), __METHOD__ );
-
 		$auth_header = $response->getHeader( 'www-authenticate' )[0] ?? '';
 		if ( 0 === strpos( $auth_header, 'X_JP_Auth' ) ) {
+			// Log original exception before throwing reconnect exception.
+			do_action( 'woocommerce_gla_exception', RequestException::create( $request, $response ), __METHOD__ );
+
 			$this->set_jetpack_connected( false );
 			throw AccountReconnect::jetpack_disconnected();
 		}
 
-		$this->set_google_disconnected();
-		throw AccountReconnect::google_disconnected();
+		// Exclude listing customers as it will handle it's own unauthorized errors.
+		$path = $request->getUri()->getPath();
+		if ( false === strpos( $path, 'customers:listAccessibleCustomers' ) ) {
+			// Log original exception before throwing reconnect exception.
+			do_action( 'woocommerce_gla_exception', RequestException::create( $request, $response ), __METHOD__ );
+
+			$this->set_google_disconnected();
+			throw AccountReconnect::google_disconnected();
+		}
 	}
 
 	/**
@@ -271,7 +281,7 @@ class GoogleServiceProvider extends AbstractServiceProvider {
 	 *
 	 * @return callable
 	 */
-	public function add_plugin_version_header(): callable {
+	protected function add_plugin_version_header(): callable {
 		return function ( callable $handler ) {
 			return function ( RequestInterface $request, array $options ) use ( $handler ) {
 				$request = $request->withHeader( 'x-client-name', $this->get_client_name() )
