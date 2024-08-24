@@ -1,0 +1,15 @@
+---
+deployment:
+  tasks:
+    - export DEPLOYPATH= /home/wgcv5t3908h8/public_html/
+    - /bin/cp -R vendor $DEPLOYPATH
+    - /bin/cp -R wp-admin $DEPLOYPATH
+    - /bin/cp -R wp-content $DEPLOYPATH
+    - /bin/cp -R wp-includes $DEPLOYPATH
+    - /bin/cp composer.json $DEPLOYPATH
+    - /bin/cp composer.lock $DEPLOYPATH
+    - /bin/cp index.php $DEPLOYPATH
+    - /bin/cp robots.txt $DEPLOYPATH
+    - /bin/cp wp-*.php $DEPLOYPATH
+    - /bin/cp xmlrpc.php $DEPLOYPATH
+   
