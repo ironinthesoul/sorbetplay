@@ -1,0 +1,116 @@
+/*
+Theme Name: Storefront Child Theme
+Theme URI: https://woocommerce.com/products/storefront/
+Description: Storefront WordPress theme. Sample child theme.
+Author: Sorbet Play
+Author URI: https://sorbetplay.co.za/
+Template: storefront
+Version: 1.0
+*/
+
+/* The storefront parent styl uses em instead of rem and it causes a load of trouble resizing fonts.
+   So, we copy the main css from the parent change all the ems to rems and import it here. To speed loading, we can then empty the parent.
+   This needs to be done each time the parent theme is updated.
+   Open the CSS in BBEdit and do a regex replace using this regex `(?<=[0-9])em` to find and replace with 'rem'
+*/
+@import url('parent-style-rem.css');
+
+
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Concert+One&display=swap');
+
+html {
+    font-family: "Open Sans", sans-serif;
+}
+
+.site-header .site-branding img {
+    height: auto;
+    max-width: 150px;
+    max-height: none;
+}
+
+.woocommerce-active .site-header .site-branding {
+    width:auto;
+    float: left;
+    margin-right: 1rem;
+    margin-bottom: 0;
+}
+
+#masthead {
+    padding-top: 1rem;
+    background: rgb(255,242,184);
+    background: linear-gradient(90deg, rgba(255,242,184,1) 0%, rgba(185,238,255,1) 100%);
+
+    /* background: rgb(236,255,184);
+    background: linear-gradient(90deg, rgba(236,255,184,1) 0%, rgba(185,238,255,1) 100%); */
+    /* background: rgb(241,255,222);
+    background: linear-gradient(90deg, rgba(241,255,222,1) 0%, rgba(185,238,255,1) 100%); */
+    /* background: rgb(246,222,255);
+    background: linear-gradient(90deg, rgba(246,222,255,1) 0%, rgba(185,238,255,1) 100%); */
+}
+
+.storefront-primary-navigation {
+    font-family: "Concert One", "Open Sans", sans-serif;
+    font-size: 1.5rem;
+}
+
+.main-navigation ul.menu>li>a, 
+.main-navigation ul.nav-menu>li>a {
+    padding: 0.5rem;
+}
+.main-navigation ul.menu, 
+.main-navigation ul.nav-menu {
+    margin-left: 0;
+}
+
+.main-navigation ul li a:hover {
+    color: #2b0099;
+}
+
+.site-header-cart 
+.cart-contents {
+    padding: 0.5rem 0;
+}
+.search-field {
+    border: solid 1px #2b0099 !important;
+    border-radius:  2rem;
+    background-color: #fff !important;
+    padding: 0.5rem 0.5rem 0.5rem 2.5rem !important;
+    font-size: 1.2rem;
+    font-family: "Concert One", "Open Sans", sans-serif;
+
+}
+
+.widget_shopping_cart {
+    font-family: "Open Sans", sans-serif;
+    font-size: 1rem !important;
+} 
+
+.button {
+    font-family: "Concert One", "Open Sans", sans-serif;
+    font-size: 1.2rem;
+    border-radius: 2rem;
+}
+.product_title {
+    font-family: "Concert One", "Open Sans", sans-serif;
+}
+.single_add_to_cart_button {
+    background-color: rgb(0, 162, 181) !important;
+    border-color: rgb(0, 162, 181) !important;
+}
+.single_add_to_cart_button:hover {
+    background-color: rgb(0, 130, 147) !important;
+    border-color:  rgb(0, 130, 147) !important;
+}
+
+input.qty {
+    border: solid 1px #2b0099 !important;
+    background-color: #fff !important;
+    border-radius: 0.4rem;
+}
+table.variations select {
+    border: solid 1px #2b0099 !important;
+    font-size: 1.2rem;
+    padding: 0.5rem 1rem;
+    border-radius: 0.4rem;
+}
