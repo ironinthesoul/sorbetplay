@@ -23,6 +23,12 @@ html {
     font-family: "Open Sans", sans-serif;
 }
 
+a:focus,
+a:focus-visible {
+    border: 0 !important;
+    outline: 0 !important;
+}
+
 .site-header .site-branding img {
     height: auto;
     max-width: 150px;
@@ -53,6 +59,8 @@ html {
     font-family: "Concert One", "Open Sans", sans-serif;
     font-size: 1.5rem;
 }
+
+
 
 .main-navigation ul.menu>li>a, 
 .main-navigation ul.nav-menu>li>a {
@@ -91,14 +99,31 @@ html {
     font-size: 1.2rem;
     border-radius: 2rem;
 }
+input[type=submit] {
+    font-family: "Concert One", "Open Sans", sans-serif;
+    font-size: 1.2rem;
+    border-radius: 2rem;
+    color: #fff;
+    background-color: rgb(23, 184, 23);
+}
+input[type=submit]:hover {
+    background-color: rgb(15, 122, 15);
+}
 .product_title {
     font-family: "Concert One", "Open Sans", sans-serif;
 }
-.single_add_to_cart_button {
+.single_add_to_cart_button,
+.add_to_cart_button,
+.wc-block-grid__product-add-to-cart a {
+    font-family: "Concert One", "Open Sans", sans-serif;
     background-color: rgb(0, 162, 181) !important;
     border-color: rgb(0, 162, 181) !important;
+    border-radius: 2rem !important;
+    font-size: 1.2rem !important;
 }
-.single_add_to_cart_button:hover {
+.single_add_to_cart_button:hover,
+.add_to_cart_button:hover 
+.wc-block-grid__product-add-to-cart a:hover{
     background-color: rgb(0, 130, 147) !important;
     border-color:  rgb(0, 130, 147) !important;
 }
@@ -114,3 +139,141 @@ table.variations select {
     padding: 0.5rem 1rem;
     border-radius: 0.4rem;
 }
+
+.storefront-breadcrumb {
+    padding: 0.7rem 0;
+    margin: 0;
+}
+
+.product_meta {
+    background-color: rgb(236,255,184);
+    padding: 1rem;
+    border: 0 !important;
+    border-radius: 0.5rem;
+}
+.post-edit-link {
+    background-color: #999;
+    color: #fff;
+    padding: 0.2rem 0.4rem;
+    border-radius: 0.2rem;
+}
+.post-edit-link:hover {
+    background-color: #666;
+}
+.entry-summary {
+    margin-bottom: 0 !important;
+}
+.wc-tabs {
+    border: 0 !important;
+}
+.description_tab,
+.additional_information_tab,
+.reviews_tab {
+    border-bottom: solid 2px #fff !important;
+    background-color: rgb(226, 249, 255);
+    padding-left: 1rem;
+    color: #000 !important;
+    font-family: "Concert One", "Open Sans", sans-serif;  
+}
+
+.description_tab.active,
+.additional_information_tab.active,
+.reviews_tab.active {
+    background-color: rgb(132, 224, 255);
+}
+
+.description_tab.active a,
+.additional_information_tab.active a,
+.reviews_tab.active a {
+    color: #000 !important;
+}
+
+.woocommerce-product-attributes-item__label {
+    background-color: rgb(244, 213, 255) !important;
+}
+.woocommerce-product-attributes-item__value {
+    background-color: rgb(248, 230, 255) !important;
+}
+
+.woocommerce-product-attributes th,
+.woocommerce-product-attributes td {
+    border: solid 1px #fff;
+}
+
+.woocommerce-tabs {
+    padding-bottom: 0;
+}
+
+.woocommerce-tabs h2 {
+    font-family: "Concert One", "Open Sans", sans-serif;   
+}
+
+#review_form #respond {
+    background-color: rgb(255, 206, 239);
+    border-radius: 0.5rem;
+    padding: 1rem 2rem;
+}
+.comment-form-rating label,
+.comment-form-comment label {
+    font-family: "Concert One", "Open Sans", sans-serif;   
+}
+
+.storefront-full-width-content .woocommerce-tabs .panel {
+    margin-bottom: 0;
+}
+
+section.related.products {
+    border-top: solid 1px #2b0099;
+    padding-top: 1.5rem;
+}
+section.related.products h2 {
+    font-family: "Concert One", "Open Sans", sans-serif;   
+}
+.site-footer {
+    background: rgb(246,222,255);
+    background: linear-gradient(90deg, rgba(185,238,255,1) 0%, rgba(246,222,255,1) 100%);
+}
+
+.site-footer .widget-title {
+    font-family: "Concert One", "Open Sans", sans-serif;   
+}
+
+.footer-widgets {
+    padding-top: 0rem;
+}
+
+.woocommerce-Price-amount {
+    font-family: "Concert One", "Open Sans", sans-serif;   
+    font-size: 1.5rem;
+}
+h1.page-title {
+    font-family: "Concert One", "Open Sans", sans-serif; 
+    font-size: 3.5rem;
+    color: #2b0099;
+}
+h2.wp-block-heading {
+    font-family: "Concert One", "Open Sans", sans-serif; 
+    font-size: 3rem;
+    color: #2b0099;
+    padding-bottom: 0.5rem;
+    border-bottom: solid 1px #b496ff;
+}
+.woocommerce-products-header {
+    padding-bottom: 1rem !important;
+}
+select.orderby {
+    border: solid 1px #2b0099;
+    border-radius: 1rem;
+    padding: 0.2rem 0.5rem;
+    background-color: #e9e3ff;
+
+}
+.storefront-sorting {
+    background-color: #f6f3ff;
+    border-bottom: solid 1px #b496ff;
+    margin-bottom: 1rem;
+}
+.wp-block-cover.alignfull.is-light {
+    margin-bottom: 2rem !important;
+}
+

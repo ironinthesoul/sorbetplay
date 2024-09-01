@@ -19,13 +19,7 @@
  *
  * @link http://codex.wordpress.org/Child_Themes
  */
-<<<<<<< HEAD:wp-content/themes/storefront-child/functions.php
 function storefront_child_enqueue_parent_style() {
-=======
-
-
-function oceanwp_child_enqueue_parent_style() {
->>>>>>> edee4dc6a2fd223030a1a229ecd6e18957e3e9a9:wp-content/themes/oceanwp-child-theme-master/functions.php
 
 	// Dynamically get version number of the parent stylesheet (lets browsers re-cache your stylesheet when you update the theme).
 	$theme   = wp_get_theme( 'Storefront' );
