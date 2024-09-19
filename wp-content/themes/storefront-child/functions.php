@@ -26,7 +26,8 @@ function storefront_child_enqueue_parent_style() {
 	$version = $theme->get( 'Version' );
 
 	// Load the stylesheet.
-	wp_enqueue_style( 'child-style', get_stylesheet_directory_uri() . '/style.css', array( 'storefront-style' ), $version );
+	wp_enqueue_style( 'child-style', get_stylesheet_directory_uri() . '/style.css', [ 'storefront-style' ], $version );
+	wp_enqueue_style( 'docular', get_stylesheet_directory_uri() . '/docular.css', [], $version );
 	
 }
 

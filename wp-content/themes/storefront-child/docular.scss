@@ -1,0 +1,113 @@
+.legalpages {
+    .part ol ol.sections {
+        font-size: 1.3rem;
+        font-weight: bold;
+    }
+    li.section {
+        font-size: 1.1rem;
+        font-weight: bold;
+    }
+    ol.units {
+        font-size: 1rem;
+        font-weight: normal;
+    }
+    h1 {
+        font-size: 2rem;
+        font-weight: bold;
+        margin: 0 0 3rem 0;
+    }
+    li.partTitle h2 {
+        font-size: 1.3rem;
+        font-weight: bold;
+        margin: 0;
+    }
+    ol.sections li.sectionTitle h3 {
+        font-size: 1.1rem;
+        font-weight: bold;
+        margin: 0;
+    }
+
+    .part ol {
+        counter-reset: sectioncounter partcounter;
+        margin: 0px;
+        padding: 0px;
+    }
+    ol.sections {
+        counter-reset: sectioncounter;
+        margin: 0px;
+        padding: 0px;
+    }
+    ol.sections li {
+        list-style: none;
+        margin-left: 2rem;
+        position: relative;
+    }
+    ol.units {
+        counter-reset: unitcounter;
+        margin: 0 0 2rem 0;
+    }
+    ol.sections li.partTitle {
+        list-style: none;
+        counter-increment: none;
+        counter-reset: numberedpart;
+        margin-left: 0;
+    }
+    ol.sections li.sectionTitle {
+        list-style: none;
+        counter-increment: none;
+        counter-reset: numberedsection;
+        margin-left: 0;
+    }
+    ol.sections li.unnumberedunit {
+        margin-left: 0;
+    }
+    .sections li:before {
+        position: absolute;
+        left: -2rem;
+    }
+    .sections li.numberedpart:before {
+        content: counter(partcounter, DECIMAL) ". ";
+        counter-increment: partcounter;
+    }
+    .sections li.numberedsection:before {
+        content: counter(sectioncounter, DECIMAL) ". ";
+        counter-increment: sectioncounter;
+    }
+    .units li.numberedunit:before {
+        content: counter(sectioncounter, DECIMAL) "." counter(unitcounter, DECIMAL) " ";
+        counter-increment: unitcounter;
+    }
+    .unnumberedsection .units li.numberedunit:before {
+        content: counter(unitcounter, DECIMAL) " ";
+        counter-increment: unitcounter;
+    }
+    ol.sections li.definitionli {
+        margin-left: 0;
+    }
+    li.unit ol,
+    li.unit ol ol ol {
+        counter-reset: loweralpha;
+    }
+    li.unit ol:not(.unnumbered) li:before,
+    li.unit ol ol ol:not(.unnumbered) li:before {
+        content: "(" counter(loweralpha, lower-alpha) ") ";
+        counter-increment: loweralpha;
+    }
+    li.unit ol ol,
+    li.unit ol ol ol ol {
+        counter-reset: lowerroman;
+    }
+    li.unit ol ol:not(.unnumbered) li:before,
+    li.unit ol ol ol ol:not(.unnumbered) li:before {
+        content: "(" counter(lowerroman, lower-roman) ") ";
+        counter-increment: lowerroman;
+    }
+    li.unit ol.unnumbered ol li:before,
+    li.unit ol ol ol.unnumbered ol li:before {
+        content: "(" counter(lowerroman, lower-alpha) ") ";
+        counter-increment: lowerroman;
+    }
+    .part dfn {
+        font-weight: bold;
+    }
+}
