@@ -102,13 +102,14 @@ a:focus-visible {
 .wp-block-button__link,
 input[type=submit] {
     font-family: "Concert One", "Open Sans", sans-serif;
-    font-size: 1.2rem;
-    border-radius: 2rem;
-    color: #fff;
-    background-color: rgb(23, 184, 23);
+    font-size: 1.2rem !important;
+    border-radius: 2rem !important;
+    color: #fff !important;
+    background-color: rgb(23, 184, 23) !important;
 }
+.wp-block-button__link:hover,
 input[type=submit]:hover {
-    background-color: rgb(15, 122, 15);
+    background-color: rgb(15, 122, 15) !important;
 }
 .product_title {
     font-family: "Concert One", "Open Sans", sans-serif;
@@ -269,12 +270,70 @@ select.orderby {
     background-color: #e9e3ff;
 
 }
+.wp-block-cover.alignfull.is-light {
+    margin-bottom: 2rem !important;
+}
+
 .storefront-sorting {
     background-color: #f6f3ff;
     border-bottom: solid 1px #b496ff;
     margin-bottom: 1rem;
+    display: flex !important;
+    flex-wrap: wrap !important;
 }
-.wp-block-cover.alignfull.is-light {
-    margin-bottom: 2rem !important;
+.woocommerce-ordering {
+    flex-grow: 1 !important;
+    margin: 0.5rem !important;
+    padding: 0 !important;
 }
+.woocommerce-result-count {
+    flex-shrink: 1 !important;
+    margin: 0.5rem !important;
+}
+.woocommerce-pagination {
+    flex-shrink: 1 !important;
+    margin: 0.5rem !important;
+    padding: 0 !important;
+    border: none !important;
+}
+
+ul.page-numbers li span.page-numbers,
+ul.page-numbers li a.page-numbers {
+        border-radius: 50%;
+        color: #fff !important;
+        font-weight: 700;
+}
+ul.page-numbers li a.page-numbers {
+    background: #b496ff !important;
+    border: solid 1px #b496ff !important;
+}
+
+ul.page-numbers li span.page-numbers {
+    background: #fff !important;
+    border: solid 1px #b496ff !important;
+    color: #b496ff !important;
+}
+ul.page-numbers li a.page-numbers:hover {
+    background-color: #2b0099 !important;
+}
+
+h1.entry-title {
+    font-family: "Concert One", "Open Sans", sans-serif;
+    color: #2b0099;
+}
+
+.coblocks-field {
+    border: solid 1px rgb(0, 191, 255) !important;
+    background-color: rgb(211, 244, 255) !important;
+    border-radius: 1.5rem;
+}
+.coblocks--inline {
+    margin: 0.5rem 1rem !important;
+}
+
+
+
+
+
+
 
