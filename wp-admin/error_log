@@ -8,3 +8,21 @@ Stack trace:
   thrown in /home/wgcv5t3908h8/public_html/wp-settings.php on line 110
 [24-Aug-2024 15:54:47 UTC] PHP Warning:  Undefined array key "container-on" in /home/wgcv5t3908h8/public_html/wp-content/plugins/duracelltomi-google-tag-manager/admin/admin.php on line 659
 [24-Aug-2024 15:54:47 UTC] PHP Warning:  Undefined array key "compat-mode" in /home/wgcv5t3908h8/public_html/wp-content/plugins/duracelltomi-google-tag-manager/admin/admin.php on line 660
+[20-Sep-2024 15:06:46 UTC] PHP Warning:  Undefined variable $buttonName in /home/wgcv5t3908h8/public_html/wp-content/plugins/wp-whatsapp/includes/PostType.php on line 164
+[20-Sep-2024 15:09:49 UTC] PHP Warning:  Undefined variable $buttonName in /home/wgcv5t3908h8/public_html/wp-content/plugins/wp-whatsapp/includes/PostType.php on line 164
+[20-Sep-2024 15:10:02 UTC] PHP Warning:  Undefined variable $buttonName in /home/wgcv5t3908h8/public_html/wp-content/plugins/wp-whatsapp/includes/PostType.php on line 164
+[20-Sep-2024 15:10:05 UTC] PHP Warning:  Undefined variable $buttonName in /home/wgcv5t3908h8/public_html/wp-content/plugins/wp-whatsapp/includes/PostType.php on line 164
+[20-Sep-2024 15:10:06 UTC] PHP Warning:  Undefined variable $buttonName in /home/wgcv5t3908h8/public_html/wp-content/plugins/wp-whatsapp/includes/PostType.php on line 164
+[20-Sep-2024 15:10:07 UTC] PHP Warning:  Undefined variable $buttonName in /home/wgcv5t3908h8/public_html/wp-content/plugins/wp-whatsapp/includes/PostType.php on line 164
+[20-Sep-2024 15:12:04 UTC] PHP Warning:  Undefined variable $buttonName in /home/wgcv5t3908h8/public_html/wp-content/plugins/wp-whatsapp/includes/PostType.php on line 164
+[20-Sep-2024 15:13:43 UTC] PHP Warning:  Undefined variable $buttonName in /home/wgcv5t3908h8/public_html/wp-content/plugins/wp-whatsapp/includes/PostType.php on line 164
+[20-Sep-2024 15:14:03 UTC] PHP Warning:  Undefined variable $buttonName in /home/wgcv5t3908h8/public_html/wp-content/plugins/wp-whatsapp/includes/PostType.php on line 164
+[20-Sep-2024 15:14:37 UTC] PHP Warning:  Undefined variable $buttonName in /home/wgcv5t3908h8/public_html/wp-content/plugins/wp-whatsapp/includes/PostType.php on line 164
+[20-Sep-2024 15:15:39 UTC] PHP Warning:  Undefined variable $buttonName in /home/wgcv5t3908h8/public_html/wp-content/plugins/wp-whatsapp/includes/PostType.php on line 164
+[20-Sep-2024 15:16:35 UTC] PHP Warning:  Undefined variable $buttonName in /home/wgcv5t3908h8/public_html/wp-content/plugins/wp-whatsapp/includes/PostType.php on line 164
+[20-Sep-2024 15:20:13 UTC] PHP Warning:  Undefined variable $buttonName in /home/wgcv5t3908h8/public_html/wp-content/plugins/wp-whatsapp/includes/PostType.php on line 164
+[20-Sep-2024 15:20:54 UTC] PHP Warning:  Undefined variable $buttonName in /home/wgcv5t3908h8/public_html/wp-content/plugins/wp-whatsapp/includes/PostType.php on line 164
+[20-Sep-2024 15:21:30 UTC] PHP Warning:  Undefined variable $buttonName in /home/wgcv5t3908h8/public_html/wp-content/plugins/wp-whatsapp/includes/PostType.php on line 164
+[20-Sep-2024 15:21:34 UTC] PHP Warning:  Undefined variable $buttonName in /home/wgcv5t3908h8/public_html/wp-content/plugins/wp-whatsapp/includes/PostType.php on line 164
+[20-Sep-2024 15:22:08 UTC] PHP Warning:  Undefined variable $buttonName in /home/wgcv5t3908h8/public_html/wp-content/plugins/wp-whatsapp/includes/PostType.php on line 164
+[20-Sep-2024 15:23:08 UTC] PHP Warning:  Undefined variable $buttonName in /home/wgcv5t3908h8/public_html/wp-content/plugins/wp-whatsapp/includes/PostType.php on line 164
