@@ -5,3 +5,4 @@ vendor/*
 config.codekit3
 .maintenance
 *.log
+docker/.DS_Store
