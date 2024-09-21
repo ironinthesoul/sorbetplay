@@ -30,5 +30,32 @@ function storefront_child_enqueue_parent_style() {
 	wp_enqueue_style( 'docular', get_stylesheet_directory_uri() . '/docular.css', [], $version );
 	
 }
-
 add_action( 'wp_enqueue_scripts', 'storefront_child_enqueue_parent_style' );
+
+
+function alter_woo_hooks() {
+    $storefront_sorting_wrapper = has_action('woocommerce_before_shop_loop', 'storefront_sorting_wrapper');
+	remove_action( 'woocommerce_before_shop_loop', 'storefront_sorting_wrapper', $storefront_sorting_wrapper );
+	// remove_action( 'woocommerce_after_shop_loop', 'storefront_sorting_wrapper', 100 );
+
+    $storefront_sorting_wrapper_close = has_action('woocommerce_before_shop_loop', 'storefront_sorting_wrapper_close');
+	remove_action( 'woocommerce_before_shop_loop', 'storefront_sorting_wrapper_close', $storefront_sorting_wrapper_close );
+	// remove_action( 'woocommerce_after_shop_loop', 'storefront_sorting_wrapper_close', 100 );
+
+
+    $storefront_woocommerce_pagination = has_action('woocommerce_before_shop_loop', 'storefront_woocommerce_pagination');
+	remove_action( 'woocommerce_before_shop_loop', 'storefront_woocommerce_pagination', $storefront_woocommerce_pagination );
+
+
+    $woocommerce_result_count = has_action('woocommerce_before_shop_loop', 'woocommerce_result_count');
+	remove_action( 'woocommerce_before_shop_loop', 'woocommerce_result_count', $woocommerce_result_count );
+
+    $woocommerce_catalog_ordering = has_action('woocommerce_before_shop_loop', 'woocommerce_catalog_ordering');
+	remove_action( 'woocommerce_before_shop_loop', 'woocommerce_catalog_ordering', $woocommerce_catalog_ordering );
+
+
+
+
+
+}
+add_action( 'after_setup_theme', 'alter_woo_hooks' );
