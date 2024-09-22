@@ -28,7 +28,7 @@ $colour-violet-light: #f4d5ff;
 $colour-purple-pale: #f6deff;
 $colour-purple: #b496ff;
 
-
+$font-concertone: "Concert One", "Open Sans", sans-serif;
 
 
 
@@ -41,7 +41,7 @@ a:focus-visible {
 h1 {
     &.entry-title,
     &.page-title {
-        font-family: "Concert One", "Open Sans", sans-serif; 
+        font-family: $font-concertone; 
         font-size: 3.5rem;
         color: $colour-indigo;
     }
@@ -49,7 +49,7 @@ h1 {
 
 h2 {
     &.wp-block-heading {
-        font-family: "Concert One", "Open Sans", sans-serif; 
+        font-family: $font-concertone; 
         font-size: 3rem;
         color: $colour-indigo;
         padding-bottom: 0.5rem;
@@ -81,7 +81,7 @@ h2 {
 }
 
 .storefront-primary-navigation {
-    font-family: "Concert One", "Open Sans", sans-serif;
+    font-family: $font-concertone;
     font-size: 1.5rem;
 }
 
@@ -111,7 +111,7 @@ h2 {
     background-color: #fff !important;
     padding: 0.5rem 0.5rem 0.5rem 2.5rem !important;
     font-size: 1.2rem;
-    font-family: "Concert One", "Open Sans", sans-serif;
+    font-family: $font-concertone;
 }
 
 .widget_shopping_cart {
@@ -120,14 +120,14 @@ h2 {
 } 
 
 .button {
-    font-family: "Concert One", "Open Sans", sans-serif;
+    font-family: $font-concertone;
     font-size: 1.2rem;
     border-radius: 2rem;
 }
 
 .wp-block-button__link,
 input[type=submit] {
-    font-family: "Concert One", "Open Sans", sans-serif;
+    font-family: $font-concertone;
     font-size: 1.2rem !important;
     border-radius: 2rem !important;
     color: #fff !important;
@@ -139,12 +139,12 @@ input[type=submit] {
     
 }
 .product_title {
-    font-family: "Concert One", "Open Sans", sans-serif;
+    font-family: $font-concertone;
 }
 .single_add_to_cart_button,
 .add_to_cart_button,
 .wc-block-grid__product-add-to-cart a {
-    font-family: "Concert One", "Open Sans", sans-serif;
+    font-family: $font-concertone;
     background-color: $colour-turquoise !important;
     border-color: $colour-turquoise !important;
     border-radius: 2rem !important;
@@ -202,7 +202,7 @@ table.variations select {
     background-color: $colour-lightblue-palest;
     padding-left: 1rem;
     color: #000 !important;
-    font-family: "Concert One", "Open Sans", sans-serif;  
+    font-family: $font-concertone;  
 
     &.active {
         background-color: $colour-lightblue;
@@ -232,7 +232,7 @@ table.variations select {
     padding-bottom: 0;
 
     h2 {
-        font-family: "Concert One", "Open Sans", sans-serif;   
+        font-family: $font-concertone;   
     }
 }
 
@@ -249,7 +249,7 @@ table.variations select {
 .comment-form-rating,
 .comment-form-comment { 
     label {
-        font-family: "Concert One", "Open Sans", sans-serif;  
+        font-family: $font-concertone;  
     } 
 }
 
@@ -258,7 +258,7 @@ section.related.products {
     padding-top: 1.5rem;
 
     h2 {
-        font-family: "Concert One", "Open Sans", sans-serif;   
+        font-family: $font-concertone;   
     }
 }
 
@@ -267,7 +267,7 @@ section.related.products {
     background: linear-gradient(90deg, $colour-lightblue-pale 0%, $colour-violet-light 100%);
 
     .widget-title {
-        font-family: "Concert One", "Open Sans", sans-serif;   
+        font-family: $font-concertone;   
     }    
 }
 
@@ -276,7 +276,7 @@ section.related.products {
 }
 
 .woocommerce-Price-amount {
-    font-family: "Concert One", "Open Sans", sans-serif;   
+    font-family: $font-concertone;   
     font-size: 1.5rem;
 }
 
@@ -369,14 +369,15 @@ ul.page-numbers {
 
     .wc-blocks-filter-wrapper {
         .wp-block-heading {
+            font-family: $font-concertone;
             color: $colour-cyan;
         }
         .wc-block-components-checkbox__input {
-            background-color: $colour-yellow-palest;
-            border-color: $colour-yellow;
+            background-color: $colour-yellow-palest !important;
+            border: solid 2px $colour-yellow !important;
 
             &:checked {
-                background-color: $colour-yellow-pale;
+                background-color: $colour-yellow-pale !important;
 
             }
         }
