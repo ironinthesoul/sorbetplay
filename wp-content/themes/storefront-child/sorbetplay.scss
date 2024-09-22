@@ -12,6 +12,7 @@ $colour-green-dark: #0f7a0f;
 $colour-turquoise: #00a2b5;
 $colour-turquoise-dark: #008293;
 
+$colour-lightblue-feint: #f5fdff;
 $colour-lightblue-palest: #e2f9ff;
 $colour-lightblue-pale: #b9eeff;
 $colour-lightblue: #84e0ff;
@@ -24,6 +25,9 @@ $colour-indigo: #2b0099;
 
 $colour-violet-lightest: #f8e6ff;
 $colour-violet-light: #f4d5ff;
+$colour-violet: #d978fc;
+$colour-violet-dark: #c943f9;
+$colour-violet-darkest: #b700fa;
 
 $colour-purple-pale: #f6deff;
 $colour-purple: #b496ff;
@@ -122,7 +126,24 @@ h2 {
 .button {
     font-family: $font-concertone;
     font-size: 1.2rem;
-    border-radius: 2rem;
+    border-radius: 2rem !important;
+
+    &.wc-forward {
+        background-color: $colour-violet !important;
+        color: #fff !important;
+
+        &:hover {
+            background-color: $colour-violet-dark !important;
+        }
+    }
+    &.checkout {
+        background-color: $colour-violet-dark !important;
+        color: #fff !important;
+
+        &:hover {
+            background-color: $colour-violet-darkest !important;
+        }
+    }
 }
 
 .wp-block-button__link,
@@ -402,15 +423,128 @@ ul.page-numbers {
             .wc-block-active-filters__clear-all {
                 margin-bottom: 0.5rem;
             }
-
         }
     }
 }
 
-body.no-sidebar .content-area {
-    width: 100%;
+.woocommerce {
+    &.widget_shopping_cart {
+        background-color: $colour-violet-lightest !important;
 
-    @media screen and (min-width: 768px) {
-        margin-right: 0;
+        .woocommerce-mini-cart__total {
+            background-color: $colour-violet-lightest !important;
+        }
+
+        .woocommerce-mini-cart__buttons {
+            background-color: $colour-violet-lightest !important;
+        }
     }
 }
+.wc-block-cart__submit-button {
+    background-color: $colour-green !important;
+    text-decoration: none !important;
+    font-family: $font-concertone;
+    border-radius: 2rem !important;
+    font-size: 1.5rem !important;
+    min-height: auto !important;
+    padding: 0.5rem !important;
+
+    &:hover {
+        background-color: $colour-green-dark !important;
+    }
+}
+h2.wc-block-components-checkout-step__title {
+    font-family: $font-concertone;
+    color: $colour-turquoise-dark !important;
+}
+.wc-block-checkout__form {
+    .wc-block-components-text-input {
+        input {
+            border: solid 1px $colour-turquoise-dark !important;
+        }
+    }
+
+    .wc-blocks-components-select__container {
+        border: solid 1px $colour-turquoise-dark !important;
+    }
+
+    .wc-block-components-checkout-place-order-button {
+        font-family: $font-concertone;
+        font-size: 1.5rem;
+        border-radius: 2rem !important;
+        background-color: $colour-green !important;
+        color: #fff !important;
+        text-decoration: none !important;
+        padding: 0.5rem !important;
+        min-height: auto !important;
+
+        &:hover {
+            background-color: $colour-green-dark !important;
+        }
+    }
+}
+.wp-block-woocommerce-checkout-order-summary-block {
+    background-color: $colour-lightblue-palest;
+}
+body.no-sidebar {
+    .content-area {
+        width: 100%;
+
+        @media screen and (min-width: 768px) {
+            margin-right: 0;
+        }
+    }
+}
+
+
+
+
+.woocommerce-order-overview {
+    &.woocommerce-thankyou-order-details {
+        &.order_details {
+            background-color: $colour-yellow-palest;
+            
+            &:before,
+            &:after {
+                background: -webkit-linear-gradient(transparent 0, transparent 0), 
+                            -webkit-linear-gradient(135deg, $colour-yellow-palest 33.33%, transparent 33.33%), 
+                            -webkit-linear-gradient(45deg, $colour-yellow-palest 33.33%, transparent 33.33%);
+                background-size: 0 100%, 16px 16px, 16px 16px;
+            }
+
+            li {
+                border-color: $colour-yellow;
+            }
+        }
+    }
+}
+
+.woocommerce-table {
+    &.woocommerce-table--order-details {
+        &.shop_table {
+            &.order_details {
+                background-color: $colour-lightblue-palest;
+
+                thead {
+                    th {
+                        background-color: $colour-lightblue-palest;
+                    }
+                }
+                tfoot {
+                    th {
+                        background-color: $colour-lightblue-palest;
+                    }
+                }
+                tbody {
+                    td {
+                        background-color: $colour-lightblue-feint;
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+
+
