@@ -82,6 +82,7 @@ h2 {
     padding-top: 1rem;
     background: $colour-yellow-pale;
     background: linear-gradient(90deg, $colour-yellow-pale 0%, $colour-lightblue-pale 100%);
+    margin-bottom: 1rem !important;
 }
 
 .storefront-primary-navigation {
@@ -545,6 +546,26 @@ body.no-sidebar {
     }
 }
 
+h1.sorbet_home_head {
+    font-family: $font-concertone;
+    text-align: center;
+    color: $colour-cyan;
+
+    @media screen and (min-width: 768px) {
+        font-size: 3.5rem;
+    }
+}
+
+h3.sorbet_home_head {
+    text-align: center;
+    font-weight: bold;
+    font-size: 1.2rem;
+    line-height: 1.4;
+
+    @media screen and (min-width: 768px) {
+        font-size: 1.7rem;
+    }
+}
 
 
 
