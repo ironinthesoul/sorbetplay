@@ -365,31 +365,44 @@ ul.page-numbers {
 }
 
 .widget {
-    margin: 0 0 1rem 0;
+    margin: 0 0 1rem 0 !important;
     font-size: 1rem !important;
 
-    .wc-blocks-filter-wrapper {
-        .wp-block-heading {
-            font-family: $font-concertone;
-            color: $colour-cyan;
-        }
-        .wc-block-components-checkbox__input {
-            background-color: $colour-yellow-palest !important;
-            border: solid 2px $colour-yellow !important;
+    .wp-block-woocommerce-filter-wrapper {
+        .wc-blocks-filter-wrapper {
+            .wp-block-heading {
+                font-family: $font-concertone;
+                color: $colour-cyan;
+            }
+            .wc-block-components-checkbox__input {
+                background-color: $colour-yellow-palest !important;
+                border: solid 2px $colour-yellow !important;
 
-            &:checked {
-                background-color: $colour-yellow-pale !important;
+                &:checked {
+                    background-color: $colour-yellow-pale !important;
 
+                }
+            }
+            .wc-block-components-checkbox__label {
+                font-size: 1rem !important;
+            }
+            .wc-block-components-price-slider__amount {
+                font-size: 1rem !important;
+                padding: 0.2rem !important;
+                background-color: $colour-yellow-palest !important;
+                border: solid 2px $colour-yellow !important;         
             }
         }
-        .wc-block-components-checkbox__label {
-            font-size: 1rem !important;
-        }
-        .wc-block-components-price-slider__amount {
-            font-size: 1rem !important;
-            padding: 0.2rem !important;
-            background-color: $colour-yellow-palest !important;
-            border: solid 2px $colour-yellow !important;         
+
+        &[data-filter-type="active-filters"] {
+            background-color: $colour-lightblue-palest;
+            border-radius: 1rem;
+            padding: 0.2rem 1rem 0 1rem;
+
+            .wc-block-active-filters__clear-all {
+                margin-bottom: 0.5rem;
+            }
+
         }
     }
 }
