@@ -366,6 +366,7 @@ ul.page-numbers {
 
 .widget {
     margin: 0 0 1rem 0;
+    font-size: 1rem !important;
 
     .wc-blocks-filter-wrapper {
         .wp-block-heading {
@@ -380,6 +381,12 @@ ul.page-numbers {
                 background-color: $colour-yellow-pale !important;
 
             }
+        }
+        .wc-block-components-price-slider__amount {
+            font-size: 1rem;
+            padding: 0.2rem;
+            background-color: $colour-yellow-palest !important;
+            border: solid 2px $colour-yellow !important;         
         }
     }
 }
