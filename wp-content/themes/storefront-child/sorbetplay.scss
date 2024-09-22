@@ -1,0 +1,384 @@
+$colour-cerise-light: #ffceef;
+
+$colour-yellow-palest: #fff9dd;
+$colour-yellow-pale: #fff2b8;
+$colour-yellow: #ffd932;
+
+$colour-green-pale: #ecffb8;
+
+$colour-green: #17b817;
+$colour-green-dark: #0f7a0f;
+
+$colour-turquoise: #00a2b5;
+$colour-turquoise-dark: #008293;
+
+$colour-lightblue-palest: #e2f9ff;
+$colour-lightblue-pale: #b9eeff;
+$colour-lightblue: #84e0ff;
+
+$colour-cyan: #00bfff; 
+$colour-cyan-light: #d3f4ff;
+
+$colour-indigo-palest: #e9e3ff;
+$colour-indigo: #2b0099;
+
+$colour-violet-lightest: #f8e6ff;
+$colour-violet-light: #f4d5ff;
+
+$colour-purple-pale: #f6deff;
+$colour-purple: #b496ff;
+
+
+
+
+
+a:focus,
+a:focus-visible {
+    border: 0 !important;
+    outline: 0 !important;
+}
+
+h1 {
+    &.entry-title,
+    &.page-title {
+        font-family: "Concert One", "Open Sans", sans-serif; 
+        font-size: 3.5rem;
+        color: $colour-indigo;
+    }
+}
+
+h2 {
+    &.wp-block-heading {
+        font-family: "Concert One", "Open Sans", sans-serif; 
+        font-size: 3rem;
+        color: $colour-indigo;
+        padding-bottom: 0.5rem;
+        border-bottom: solid 1px $colour-purple;
+    }
+}
+
+.site-header {
+    .site-branding { 
+        img {
+            height: auto;
+            max-width: 150px;
+            max-height: none;
+        }
+        .woocommerce-active & {
+            width:auto;
+            float: left;
+            margin-right: 1rem;
+            margin-bottom: 0;
+        }
+
+    }
+}
+
+#masthead {
+    padding-top: 1rem;
+    background: $colour-yellow-pale;
+    background: linear-gradient(90deg, $colour-yellow-pale 0%, $colour-lightblue-pale 100%);
+}
+
+.storefront-primary-navigation {
+    font-family: "Concert One", "Open Sans", sans-serif;
+    font-size: 1.5rem;
+}
+
+.main-navigation {
+    .main-navigation {
+        >ul.menu, 
+        >ul.nav-menu {
+            margin-left: 0;
+            >a {
+                padding: 0.5rem;
+            }
+        }
+        ul li a:hover {
+            color: $colour-indigo;
+        }
+    }
+}
+
+.site-header-cart {
+    .cart-contents {
+        padding: 0.5rem 0;
+    }
+}
+.search-field {
+    border: solid 1px $colour-indigo !important;
+    border-radius:  2rem;
+    background-color: #fff !important;
+    padding: 0.5rem 0.5rem 0.5rem 2.5rem !important;
+    font-size: 1.2rem;
+    font-family: "Concert One", "Open Sans", sans-serif;
+}
+
+.widget_shopping_cart {
+    font-family: "Open Sans", sans-serif;
+    font-size: 1rem !important;
+} 
+
+.button {
+    font-family: "Concert One", "Open Sans", sans-serif;
+    font-size: 1.2rem;
+    border-radius: 2rem;
+}
+
+.wp-block-button__link,
+input[type=submit] {
+    font-family: "Concert One", "Open Sans", sans-serif;
+    font-size: 1.2rem !important;
+    border-radius: 2rem !important;
+    color: #fff !important;
+    background-color: $colour-green !important;
+    
+    &:hover {
+        background-color: $colour-green-dark !important;
+    }
+    
+}
+.product_title {
+    font-family: "Concert One", "Open Sans", sans-serif;
+}
+.single_add_to_cart_button,
+.add_to_cart_button,
+.wc-block-grid__product-add-to-cart a {
+    font-family: "Concert One", "Open Sans", sans-serif;
+    background-color: $colour-turquoise !important;
+    border-color: $colour-turquoise !important;
+    border-radius: 2rem !important;
+    font-size: 1.2rem !important;
+
+    &:hover{
+        background-color: $colour-turquoise-dark !important;
+        border-color:  $colour-turquoise-dark !important;
+    }
+}
+
+input.qty {
+    border: solid 1px $colour-indigo !important;
+    background-color: #fff !important;
+    border-radius: 0.4rem;
+}
+table.variations select {
+    border: solid 1px $colour-indigo !important;
+    font-size: 1.2rem;
+    padding: 0.5rem 1rem;
+    border-radius: 0.4rem;
+}
+
+.storefront-breadcrumb {
+    padding: 0.7rem 0;
+    margin: 0;
+}
+
+.product_meta {
+    background-color: $colour-green-pale;
+    padding: 1rem;
+    border: 0 !important;
+    border-radius: 0.5rem;
+}
+.post-edit-link {
+    background-color: #999;
+    color: #fff;
+    padding: 0.2rem 0.4rem;
+    border-radius: 0.2rem;
+    
+    &:hover {
+        background-color: #666;
+    }
+}
+.entry-summary {
+    margin-bottom: 0 !important;
+}
+.wc-tabs {
+    border: 0 !important;
+}
+.description_tab,
+.additional_information_tab,
+.reviews_tab {
+    border-bottom: solid 2px #fff !important;
+    background-color: $colour-lightblue-palest;
+    padding-left: 1rem;
+    color: #000 !important;
+    font-family: "Concert One", "Open Sans", sans-serif;  
+
+    &.active {
+        background-color: $colour-lightblue;
+
+        a {
+            color: #000 !important;
+        }
+        
+    }
+}
+
+.woocommerce-product-attributes-item__label {
+    background-color: $colour-violet-light !important;
+}
+.woocommerce-product-attributes-item__value {
+    background-color: $colour-violet-lightest !important;
+}
+
+.woocommerce-product-attributes {
+    th,
+    td {
+        border: solid 1px #fff;
+    }
+}
+
+.woocommerce-tabs {
+    padding-bottom: 0;
+
+    h2 {
+        font-family: "Concert One", "Open Sans", sans-serif;   
+    }
+}
+
+.storefront-full-width-content .woocommerce-tabs .panel {
+    margin-bottom: 0;
+}
+
+#review_form #respond {
+    background-color: $colour-cerise-light;
+    border-radius: 0.5rem;
+    padding: 1rem 2rem;
+}
+
+.comment-form-rating,
+.comment-form-comment { 
+    label {
+        font-family: "Concert One", "Open Sans", sans-serif;  
+    } 
+}
+
+section.related.products {
+    border-top: solid 1px $colour-indigo;
+    padding-top: 1.5rem;
+
+    h2 {
+        font-family: "Concert One", "Open Sans", sans-serif;   
+    }
+}
+
+.site-footer {
+    background: $colour-purple-pale;
+    background: linear-gradient(90deg, $colour-lightblue-pale 0%, $colour-violet-light 100%);
+
+    .widget-title {
+        font-family: "Concert One", "Open Sans", sans-serif;   
+    }    
+}
+
+.footer-widgets {
+    padding-top: 0rem;
+}
+
+.woocommerce-Price-amount {
+    font-family: "Concert One", "Open Sans", sans-serif;   
+    font-size: 1.5rem;
+}
+
+.woocommerce-products-header {
+    padding-bottom: 1rem !important;
+}
+select.orderby {
+    border: solid 1px $colour-indigo;
+    border-radius: 1rem;
+    padding: 0.2rem 0.5rem;
+    background-color: $colour-indigo-palest;
+}
+
+.wp-block-cover.alignfull.is-light {
+    margin-bottom: 2rem !important;
+}
+
+.storefront-sorting {
+    background-color: $colour-indigo-palest;
+    border-bottom: solid 1px $colour-purple;
+    margin-bottom: 1rem;
+    display: flex !important;
+    flex-wrap: wrap !important;
+}
+
+.woocommerce-ordering {
+    flex-grow: 1 !important;
+    margin: 0.5rem !important;
+    padding: 0 !important;
+}
+
+.woocommerce-result-count {
+    flex-shrink: 1 !important;
+    margin: 0.5rem !important;
+}
+
+.woocommerce-pagination {
+    flex-shrink: 1 !important;
+    margin: 0.5rem !important;
+    padding: 0 !important;
+    border: none !important;
+}
+
+ul.page-numbers {
+    li {
+        span.page-numbers,
+        a.page-numbers {
+            border-radius: 50%;
+            color: #fff !important;
+            font-weight: 700;
+        }
+
+        a {
+            &.page-numbers {
+                background: $colour-purple !important;
+                border: solid 1px $colour-purple !important;
+            }
+        }
+        
+        span {
+            &.page-numbers {
+                background: #fff !important;
+                border: solid 1px $colour-purple !important;
+                color: $colour-purple !important;
+            
+                &:hover {
+                    background-color: $colour-indigo !important;
+                }     
+            }
+        }
+    }
+}
+
+.coblocks-field {
+    border: solid 1px $colour-cyan !important;
+    background-color: $colour-cyan-light !important;
+    border-radius: 1.5rem;
+}
+.coblocks--inline {
+    margin: 0.5rem 1rem !important;
+}
+
+.cn-button {
+    border-radius: 25px;
+    color: #fff;
+}
+
+.widget {
+    margin: 0 0 1rem 0;
+
+    .wc-blocks-filter-wrapper {
+        .wp-block-heading {
+            color: $colour-cyan;
+        }
+        .wc-block-components-checkbox__input {
+            background-color: $colour-yellow-palest;
+            border-color: $colour-yellow;
+
+            &:checked {
+                background-color: $colour-yellow-pale;
+
+            }
+        }
+    }
+}
