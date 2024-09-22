@@ -33,7 +33,6 @@ function storefront_child_enqueue_parent_style() {
 }
 add_action( 'wp_enqueue_scripts', 'storefront_child_enqueue_parent_style' );
 
-
 function alter_woo_hooks() {
     $storefront_sorting_wrapper = has_action('woocommerce_before_shop_loop', 'storefront_sorting_wrapper');
 	remove_action( 'woocommerce_before_shop_loop', 'storefront_sorting_wrapper', $storefront_sorting_wrapper );
@@ -53,10 +52,17 @@ function alter_woo_hooks() {
 
     $woocommerce_catalog_ordering = has_action('woocommerce_before_shop_loop', 'woocommerce_catalog_ordering');
 	remove_action( 'woocommerce_before_shop_loop', 'woocommerce_catalog_ordering', $woocommerce_catalog_ordering );
-
-
-
-
-
 }
 add_action( 'after_setup_theme', 'alter_woo_hooks' );
+
+function conditional_sidebar_display() {
+    // Check if we are on a WooCommerce archive page (category, tag, etc.)
+    if ( is_shop() || is_product_category() || is_product_tag() ) {
+        // Load the sidebar on WooCommerce archive pages
+        add_action( 'storefront_sidebar', 'storefront_get_sidebar', 10 );
+    } else {
+        // Remove the sidebar on all other pages
+        remove_action( 'storefront_sidebar', 'storefront_get_sidebar', 10 );
+    }
+}
+add_action( 'wp', 'conditional_sidebar_display' );
