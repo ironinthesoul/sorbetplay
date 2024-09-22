@@ -26,3 +26,35 @@ Stack trace:
 [20-Sep-2024 15:21:34 UTC] PHP Warning:  Undefined variable $buttonName in /home/wgcv5t3908h8/public_html/wp-content/plugins/wp-whatsapp/includes/PostType.php on line 164
 [20-Sep-2024 15:22:08 UTC] PHP Warning:  Undefined variable $buttonName in /home/wgcv5t3908h8/public_html/wp-content/plugins/wp-whatsapp/includes/PostType.php on line 164
 [20-Sep-2024 15:23:08 UTC] PHP Warning:  Undefined variable $buttonName in /home/wgcv5t3908h8/public_html/wp-content/plugins/wp-whatsapp/includes/PostType.php on line 164
+[21-Sep-2024 17:53:32 UTC] PHP Warning:  Trying to access array offset on value of type bool in /home/wgcv5t3908h8/public_html/wp-content/plugins/ultimate-infinite-scroll/includes/helpers.php on line 53
+[21-Sep-2024 17:53:32 UTC] PHP Warning:  Trying to access array offset on value of type bool in /home/wgcv5t3908h8/public_html/wp-content/plugins/ultimate-infinite-scroll/includes/helpers.php on line 55
+[21-Sep-2024 17:53:32 UTC] PHP Warning:  Trying to access array offset on value of type bool in /home/wgcv5t3908h8/public_html/wp-content/plugins/ultimate-infinite-scroll/includes/helpers.php on line 56
+[21-Sep-2024 17:53:32 UTC] PHP Warning:  Trying to access array offset on value of type bool in /home/wgcv5t3908h8/public_html/wp-content/plugins/ultimate-infinite-scroll/includes/helpers.php on line 59
+[21-Sep-2024 17:53:32 UTC] PHP Warning:  Trying to access array offset on value of type bool in /home/wgcv5t3908h8/public_html/wp-content/plugins/ultimate-infinite-scroll/includes/helpers.php on line 60
+[21-Sep-2024 17:53:32 UTC] PHP Warning:  Trying to access array offset on value of type bool in /home/wgcv5t3908h8/public_html/wp-content/plugins/ultimate-infinite-scroll/includes/helpers.php on line 61
+[21-Sep-2024 17:53:32 UTC] PHP Warning:  Trying to access array offset on value of type bool in /home/wgcv5t3908h8/public_html/wp-content/plugins/ultimate-infinite-scroll/includes/helpers.php on line 62
+[21-Sep-2024 17:53:32 UTC] PHP Warning:  Trying to access array offset on value of type bool in /home/wgcv5t3908h8/public_html/wp-content/plugins/ultimate-infinite-scroll/includes/helpers.php on line 63
+[21-Sep-2024 17:53:32 UTC] PHP Warning:  Trying to access array offset on value of type bool in /home/wgcv5t3908h8/public_html/wp-content/plugins/ultimate-infinite-scroll/includes/helpers.php on line 64
+[21-Sep-2024 17:53:32 UTC] PHP Warning:  Trying to access array offset on value of type bool in /home/wgcv5t3908h8/public_html/wp-content/plugins/ultimate-infinite-scroll/includes/helpers.php on line 65
+[21-Sep-2024 17:53:32 UTC] PHP Warning:  Trying to access array offset on value of type bool in /home/wgcv5t3908h8/public_html/wp-content/plugins/ultimate-infinite-scroll/includes/helpers.php on line 66
+[21-Sep-2024 17:53:32 UTC] PHP Warning:  Trying to access array offset on value of type bool in /home/wgcv5t3908h8/public_html/wp-content/plugins/ultimate-infinite-scroll/includes/helpers.php on line 67
+[21-Sep-2024 17:53:32 UTC] PHP Warning:  Trying to access array offset on value of type bool in /home/wgcv5t3908h8/public_html/wp-content/plugins/ultimate-infinite-scroll/includes/helpers.php on line 68
+[21-Sep-2024 17:53:32 UTC] PHP Warning:  Trying to access array offset on value of type bool in /home/wgcv5t3908h8/public_html/wp-content/plugins/ultimate-infinite-scroll/includes/helpers.php on line 69
+[21-Sep-2024 17:53:32 UTC] PHP Warning:  Trying to access array offset on value of type bool in /home/wgcv5t3908h8/public_html/wp-content/plugins/ultimate-infinite-scroll/includes/helpers.php on line 70
+[21-Sep-2024 17:53:33 UTC] PHP Warning:  Trying to access array offset on value of type bool in /home/wgcv5t3908h8/public_html/wp-content/plugins/ultimate-infinite-scroll/includes/helpers.php on line 53
+[21-Sep-2024 17:53:33 UTC] PHP Warning:  Trying to access array offset on value of type bool in /home/wgcv5t3908h8/public_html/wp-content/plugins/ultimate-infinite-scroll/includes/helpers.php on line 55
+[21-Sep-2024 17:53:33 UTC] PHP Warning:  Trying to access array offset on value of type bool in /home/wgcv5t3908h8/public_html/wp-content/plugins/ultimate-infinite-scroll/includes/helpers.php on line 56
+[21-Sep-2024 17:53:33 UTC] PHP Warning:  Trying to access array offset on value of type bool in /home/wgcv5t3908h8/public_html/wp-content/plugins/ultimate-infinite-scroll/includes/helpers.php on line 59
+[21-Sep-2024 17:53:33 UTC] PHP Warning:  Trying to access array offset on value of type bool in /home/wgcv5t3908h8/public_html/wp-content/plugins/ultimate-infinite-scroll/includes/helpers.php on line 60
+[21-Sep-2024 17:53:33 UTC] PHP Warning:  Trying to access array offset on value of type bool in /home/wgcv5t3908h8/public_html/wp-content/plugins/ultimate-infinite-scroll/includes/helpers.php on line 61
+[21-Sep-2024 17:53:33 UTC] PHP Warning:  Trying to access array offset on value of type bool in /home/wgcv5t3908h8/public_html/wp-content/plugins/ultimate-infinite-scroll/includes/helpers.php on line 62
+[21-Sep-2024 17:53:33 UTC] PHP Warning:  Trying to access array offset on value of type bool in /home/wgcv5t3908h8/public_html/wp-content/plugins/ultimate-infinite-scroll/includes/helpers.php on line 63
+[21-Sep-2024 17:53:33 UTC] PHP Warning:  Trying to access array offset on value of type bool in /home/wgcv5t3908h8/public_html/wp-content/plugins/ultimate-infinite-scroll/includes/helpers.php on line 64
+[21-Sep-2024 17:53:33 UTC] PHP Warning:  Trying to access array offset on value of type bool in /home/wgcv5t3908h8/public_html/wp-content/plugins/ultimate-infinite-scroll/includes/helpers.php on line 65
+[21-Sep-2024 17:53:33 UTC] PHP Warning:  Trying to access array offset on value of type bool in /home/wgcv5t3908h8/public_html/wp-content/plugins/ultimate-infinite-scroll/includes/helpers.php on line 66
+[21-Sep-2024 17:53:33 UTC] PHP Warning:  Trying to access array offset on value of type bool in /home/wgcv5t3908h8/public_html/wp-content/plugins/ultimate-infinite-scroll/includes/helpers.php on line 67
+[21-Sep-2024 17:53:33 UTC] PHP Warning:  Trying to access array offset on value of type bool in /home/wgcv5t3908h8/public_html/wp-content/plugins/ultimate-infinite-scroll/includes/helpers.php on line 68
+[21-Sep-2024 17:53:33 UTC] PHP Warning:  Trying to access array offset on value of type bool in /home/wgcv5t3908h8/public_html/wp-content/plugins/ultimate-infinite-scroll/includes/helpers.php on line 69
+[21-Sep-2024 17:53:33 UTC] PHP Warning:  Trying to access array offset on value of type bool in /home/wgcv5t3908h8/public_html/wp-content/plugins/ultimate-infinite-scroll/includes/helpers.php on line 70
+[22-Sep-2024 05:50:57 UTC] PHP Warning:  Undefined variable $buttonName in /home/wgcv5t3908h8/public_html/wp-content/plugins/wp-whatsapp/includes/PostType.php on line 164
+[22-Sep-2024 05:59:43 UTC] PHP Warning:  Undefined variable $buttonName in /home/wgcv5t3908h8/public_html/wp-content/plugins/wp-whatsapp/includes/PostType.php on line 164
