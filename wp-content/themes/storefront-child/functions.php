@@ -56,13 +56,20 @@ function alter_woo_hooks() {
 add_action( 'after_setup_theme', 'alter_woo_hooks' );
 
 function conditional_sidebar_display() {
-    // Check if we are on a WooCommerce archive page (category, tag, etc.)
     if ( is_shop() || is_product_category() || is_product_tag() ) {
-        // Load the sidebar on WooCommerce archive pages
         add_action( 'storefront_sidebar', 'storefront_get_sidebar', 10 );
-    } else {
-        // Remove the sidebar on all other pages
+    } 
+	else {
         remove_action( 'storefront_sidebar', 'storefront_get_sidebar', 10 );
     }
 }
 add_action( 'wp', 'conditional_sidebar_display' );
+
+function add_no_sidebar_class( $classes ) {
+    if ( !(is_shop() || is_product_category() || is_product_tag()) ) {
+        $classes[] = 'no-sidebar';
+    }
+
+    return $classes;
+}
+add_filter( 'body_class', 'add_no_sidebar_class' );

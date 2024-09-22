@@ -406,3 +406,11 @@ ul.page-numbers {
         }
     }
 }
+
+body.no-sidebar .content-area {
+    width: 100%;
+
+    @media screen and (min-width: 768px) {
+        margin-right: 0;
+    }
+}
