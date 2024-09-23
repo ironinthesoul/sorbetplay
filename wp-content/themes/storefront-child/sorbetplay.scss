@@ -3,6 +3,7 @@ $colour-cerise-light: #ffceef;
 $colour-yellow-palest: #fff9dd;
 $colour-yellow-pale: #fff2b8;
 $colour-yellow: #ffd932;
+$colour-yellow-dark: #dfb600;
 
 $colour-green-pale: #ecffb8;
 
@@ -17,11 +18,14 @@ $colour-lightblue-palest: #e2f9ff;
 $colour-lightblue-pale: #b9eeff;
 $colour-lightblue: #84e0ff;
 
-$colour-cyan: #00bfff; 
 $colour-cyan-light: #d3f4ff;
+$colour-cyan: #00bfff; 
+$colour-cyan-dark: #0090c0; 
 
 $colour-indigo-palest: #e9e3ff;
+$colour-indigo-light: #5e37c1;
 $colour-indigo: #2b0099;
+$colour-indigo-dark: #11003c;
 
 $colour-violet-lightest: #f8e6ff;
 $colour-violet-light: #f4d5ff;
@@ -31,6 +35,7 @@ $colour-violet-darkest: #b700fa;
 
 $colour-purple-pale: #f6deff;
 $colour-purple: #b496ff;
+$colour-purple-dark: #8a67e0;
 
 $font-concertone: "Concert One", "Open Sans", sans-serif;
 
@@ -82,6 +87,7 @@ h2 {
     padding-top: 1rem;
     background: $colour-yellow-pale;
     background: linear-gradient(90deg, $colour-yellow-pale 0%, $colour-lightblue-pale 100%);
+    margin-bottom: 1rem !important;
 }
 
 .storefront-primary-navigation {
@@ -89,24 +95,30 @@ h2 {
     font-size: 1.5rem;
 }
 
-.main-navigation {
-    .main-navigation {
-        >ul.menu, 
-        >ul.nav-menu {
-            margin-left: 0;
-            >a {
-                padding: 0.5rem;
+
+#menu-main-menu {
+    li.menu-item {
+        a {
+            color: $colour-indigo !important;
+            font-size: 2.5rem;
+            padding: 1rem 1.5rem 1rem 0;
+            line-height: 1;
+
+            &:hover {
+                color: $colour-indigo-dark !important;
             }
         }
-        ul li a:hover {
-            color: $colour-indigo;
+        &.focus {
+            a {
+                color: $colour-indigo-dark !important;
+            }
         }
     }
 }
 
-.site-header-cart {
+#site-header-cart {
     .cart-contents {
-        padding: 0.5rem 0;
+        padding: 1rem 0 !important;
     }
 }
 .search-field {
@@ -545,6 +557,109 @@ body.no-sidebar {
     }
 }
 
+h1.sorbet_home_head {
+    font-family: $font-concertone;
+    text-align: center;
+    color: $colour-cyan;
+
+    @media screen and (min-width: 768px) {
+        font-size: 3.5rem;
+    }
+}
+
+h3.sorbet_home_head {
+    text-align: center;
+    font-size: 1.2rem;
+    line-height: 1.4;
+    font-weight: 100;
+    color: #666;
+
+    @media screen and (min-width: 768px) {
+        font-size: 1.7rem;
+    }
+}
 
 
+
+ 
+
+
+
+
+.sorbet_button {
+    font-family: $font-concertone;
+    font-size: 1.2rem !important;
+    border-radius: 2rem !important;
+    color: #fff !important;
+    background-color: #666 !important;
+
+    &:hover {
+        background-color: #333 !important;
+    }
+
+    &.sorbet_indigo {
+        background-color: $colour-indigo-light !important;
+
+        &:hover {
+            background-color: $colour-indigo !important;
+        }
+    }
+
+    &.sorbet_green {
+        background-color: $colour-green !important;
+
+        &:hover {
+            background-color: $colour-green-dark !important;
+        }
+    }
+    &.sorbet_cyan {
+        background-color: $colour-cyan !important;
+
+        &:hover {
+            background-color: $colour-cyan-dark !important;
+        }
+    }
+    &.sorbet_yellow {
+        background-color: $colour-yellow !important;
+
+        &:hover {
+            background-color: $colour-yellow-dark !important;
+        }
+    }
+    &.sorbet_turquoise {
+        background-color: $colour-turquoise !important;
+
+        &:hover {
+            background-color: $colour-turquoise-dark !important;
+        }
+    }
+    &.sorbet_violet {
+        background-color: $colour-violet !important;
+
+        &:hover {
+            background-color: $colour-violet-dark !important;
+        }
+    }
+    &.sorbet_purple {
+        background-color: $colour-purple !important;
+
+        &:hover {
+            background-color: $colour-purple-dark !important;
+        }
+    }
+}
+
+
+.homepage_category_button a {
+    font-family: $font-concertone;
+    font-size: 1.2rem !important;
+    border-radius: 2rem !important;
+    color: #fff !important;
+    background-color: $colour-purple !important;
+    margin-bottom: 2rem !important;
+
+    &:hover {
+        background-color: $colour-purple-dark !important;
+    }
+}
 
