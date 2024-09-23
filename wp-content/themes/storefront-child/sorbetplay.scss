@@ -41,6 +41,43 @@ $font-concertone: "Concert One", "Open Sans", sans-serif;
 
 
 
+.woocommerce-message[role="alert"] {
+    border: solid 1px $colour-purple-dark;
+    border-radius: 1rem;
+    background-color: $colour-purple-pale;
+    color: #000;
+
+    &::before {
+        color: $colour-purple-dark !important;
+    }
+
+
+    .button.wc-forward {
+        padding-left: 1.5rem;
+        padding-right: 1.5rem;
+
+        color: $colour-purple-dark !important;
+        background-color: #fff !important;
+        margin: 0 !important;
+    
+        &:hover {
+            background-color: $colour-purple-dark !important;
+            color: #fff !important;
+
+        }
+    }
+
+
+
+}
+
+
+
+
+
+
+
+
 a:focus,
 a:focus-visible {
     border: 0 !important;
