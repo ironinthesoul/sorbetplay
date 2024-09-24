@@ -29,7 +29,8 @@ function storefront_child_enqueue_parent_style() {
 	wp_enqueue_style( 'child-style', get_stylesheet_directory_uri() . '/style.css', [ 'storefront-style' ], $version );
 	wp_enqueue_style( 'sorbetplay', get_stylesheet_directory_uri() . '/sorbetplay.css', [], $version );
 	wp_enqueue_style( 'docular', get_stylesheet_directory_uri() . '/docular.css', [], $version );
-	
+	wp_enqueue_style( 'coblocks-frontend', '/wp-content/plugins/coblocks/dist/style-coblocks-1.css', [], $version );
+
 }
 add_action( 'wp_enqueue_scripts', 'storefront_child_enqueue_parent_style' );
 
@@ -73,3 +74,4 @@ function add_no_sidebar_class( $classes ) {
     return $classes;
 }
 add_filter( 'body_class', 'add_no_sidebar_class' );
+
