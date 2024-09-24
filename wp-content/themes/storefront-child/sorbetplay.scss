@@ -213,7 +213,7 @@ h2 {
     }
 }
 
-.wp-block-button__link,
+.wp-block-coblocks-form .wp-block-button__link,
 input[type=submit] {
     font-family: $font-concertone;
     font-size: 1.2rem !important;
@@ -223,9 +223,9 @@ input[type=submit] {
     
     &:hover {
         background-color: $colour-green-dark !important;
-    }
-    
+    }   
 }
+
 .product_title {
     font-family: $font-concertone;
 }
