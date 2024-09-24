@@ -104,10 +104,20 @@ h2 {
 }
 
 .site-header {
+    @media screen and (max-width: 767px) {
+        padding-bottom: 1rem !important;
+    }
+
+    
     .site-branding { 
+
+        @media screen and (max-width: 767px) {
+            max-width: 120px !important;
+        }
+
         img {
             height: auto;
-            max-width: 150px;
+            max-width: 150px !important;
             max-height: none;
         }
         .woocommerce-active & {
@@ -118,6 +128,17 @@ h2 {
         }
 
     }
+}
+
+#site-navigation-menu-toggle {
+    border-radius: 2.5rem;
+    border-color: $colour-yellow-dark;
+    background-color:  $colour-yellow-pale;
+    font-family: $font-concertone;
+    font-size: 1.3rem;
+    padding: 0.2rem 0.9rem 0.2rem 2.6rem;
+    line-height: 1.5;
+
 }
 
 #masthead {
