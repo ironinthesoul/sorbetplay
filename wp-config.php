@@ -5,7 +5,7 @@
 define( 'DISALLOW_FILE_EDIT', true ); // Disable File Editor - Security > Settings > WordPress Tweaks > File Editor
 // END iThemes Security - Do not modify or remove this line
 
-define( 'ITSEC_ENCRYPTION_KEY', 'T3g2XmJzfSxZeDBuVy9qQi9LLFExPyFyMj1gWV56cVAuXXlMYS47LD5ONE1PbHstYyNdUkYxdmZhUjQyMjFmUQ==' );
+define( 'ITSEC_ENCRYPTION_KEY', 'Zy1vMmc+JCUvKF1Tb3J4cE90X31fNkg1T0VxZ3M4XkU+ZTpiWjRLWXchJX5uaiMgbSVnS0lLVj0/Vmt1WEVBLA==' );
 
 require_once (__DIR__ . '/vendor/autoload.php');
 
