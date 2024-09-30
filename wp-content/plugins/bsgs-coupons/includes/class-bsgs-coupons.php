@@ -110,8 +110,10 @@ class Bsgs_Coupons {
 
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_styles' );
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_scripts' );
+		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_scripts' );
 
-        $this->loader->add_filter('woocommerce_coupon_discount_types', $plugin_public, 'register_bsgs_coupon_type');
+		$this->loader->add_filter('woocommerce_coupon_discount_types', $plugin_public, 'register_bsgs_coupon_type');
+		$this->loader->add_filter('woocommerce_coupon_is_valid', $plugin_public, 'validate_bsgs_coupon', 10, 2);
 
 
 	}

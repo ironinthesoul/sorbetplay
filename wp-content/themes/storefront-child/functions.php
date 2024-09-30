@@ -27,8 +27,8 @@ function storefront_child_enqueue_parent_style() {
 
 	// Load the stylesheet.
 	wp_enqueue_style( 'child-style', get_stylesheet_directory_uri() . '/style.css', [ 'storefront-style' ], $version );
-	wp_enqueue_style( 'sorbetplay', get_stylesheet_directory_uri() . '/sorbetplay.css', [], $version );
-	wp_enqueue_style( 'docular', get_stylesheet_directory_uri() . '/docular.css', [], $version );
+	wp_enqueue_style( 'sorbetplay', get_stylesheet_directory_uri() . '/assets/css/sorbetplay.css', [], $version );
+	wp_enqueue_style( 'docular', get_stylesheet_directory_uri() . '/assets/css/docular.css', [], $version );
 	wp_enqueue_style( 'coblocks-frontend', '/wp-content/plugins/coblocks/dist/style-coblocks-1.css', [], $version );
 
 }
