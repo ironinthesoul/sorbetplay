@@ -149,4 +149,13 @@ class Bsgs_Coupons {
 		return $this->version;
 	}
 
+	static function get_coupon_meta($coupon) {
+		$raw_coupon_data = $coupon->get_meta_data();
+		$coupon_meta = [];
+		foreach($raw_coupon_data as $data) {
+			$coupon_meta[$data->key] = $data->value;
+		}
+        return $coupon_meta;
+    }
+
 }

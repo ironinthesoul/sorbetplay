@@ -73,21 +73,17 @@ class Bsgs_Coupons_Admin {
         echo("<div id=\"bsgs_options_coupon_data\" class=\"panel woocommerce_options_panel\">");
             echo("<div class=\"options_group\">");
 
-                $raw_coupon_data = $coupon->get_meta_data();
-                $coupon_data = [];
-                foreach($raw_coupon_data as $data) {
-                    $coupon_data[$data->key] = $data->value;
-                }
+                $coupon_meta = Bsgs_Coupons::get_coupon_meta($coupon);
 
                 $all_attributes = wc_get_attribute_taxonomies();
                 $attributes = [0 => __("Choose an attribute...", 'bsgs-coupons')];
                 $hidden_class = ($coupon_id) ? "" : " hidden";
 
-                $attribute_label = isset($coupon_data['bsgs_product_attribute_label']) ? __($coupon_data['bsgs_product_attribute_label'], 'bsgs-coupons') : "";
+                $attribute_label = isset($coupon_meta['bsgs_product_attribute_label']) ? __($coupon_meta['bsgs_product_attribute_label'], 'bsgs-coupons') : "";
 
-                if($coupon_data['bsgs_attribute_taxonomy']) {
+                if($coupon_meta['bsgs_attribute_taxonomy']) {
 
-                    $attribute = wc_get_attribute( $coupon_data['bsgs_attribute_taxonomy'] );
+                    $attribute = wc_get_attribute( $coupon_meta['bsgs_attribute_taxonomy'] );
 
                     $purchase_attribute_options = "";
                     $gift_attribute_options = "";
@@ -104,9 +100,9 @@ class Bsgs_Coupons_Admin {
 
                         if ( ! is_wp_error( $terms ) ) {
                             foreach( $terms as $term ) {
-                                $purchase_selected = ($term->term_id == $coupon_data['bsgs_purchase_product_attribute']) ? " selected" : "";
+                                $purchase_selected = ($term->term_id == $coupon_meta['bsgs_purchase_product_attribute']) ? " selected" : "";
                                 $purchase_attribute_options .= "<option value=\"" . $term->term_id . "\"" . $purchase_selected . ">" . $term->name . '</option>';
-                                $gift_selected = ($term->term_id == $coupon_data['bsgs_gift_product_attribute']) ? " selected" : "";
+                                $gift_selected = ($term->term_id == $coupon_meta['bsgs_gift_product_attribute']) ? " selected" : "";
                                 $gift_attribute_options .= "<option value=\"" . $term->term_id . "\"" . $gift_selected . ">" . $term->name . '</option>';
                             }
                         } 
@@ -123,7 +119,7 @@ class Bsgs_Coupons_Admin {
                     'description'       => __( 'The product attribute to use to restrict the products to.', 'bsgs-coupons' ),
                     'desc_tip'          => true,
                     'options'           => $attributes,
-                    'value'             => isset($coupon_data['bsgs_attribute_taxonomy']) ? $coupon_data['bsgs_attribute_taxonomy'] : null,
+                    'value'             => isset($coupon_meta['bsgs_attribute_taxonomy']) ? $coupon_meta['bsgs_attribute_taxonomy'] : null,
                 ]);
 
             echo("</div>");
@@ -136,7 +132,7 @@ class Bsgs_Coupons_Admin {
                     'description'       => __( 'The quantity of items to purchase to trigger the coupon.', 'bsgs-coupons' ),
                     'data_type'         => 'number',
                     'desc_tip'          => true,
-                    'value'             => isset($coupon_data['bsgs_purchase_quantity']) ? $coupon_data['bsgs_purchase_quantity'] : null,
+                    'value'             => isset($coupon_meta['bsgs_purchase_quantity']) ? $coupon_meta['bsgs_purchase_quantity'] : null,
                     'type'              => 'number',
                     'custom_attributes' => [
                         'step' 	=> 'any',
@@ -160,7 +156,7 @@ class Bsgs_Coupons_Admin {
                     'description'       => __( 'The extra quantity of items the customer receives if the coupon triggers.', 'bsgs-coupons' ),
                     'data_type'         => 'number',
                     'desc_tip'          => true,
-                    'value'             => isset($coupon_data['bsgs_gift_quantity']) ? $coupon_data['bsgs_gift_quantity'] : null,
+                    'value'             => isset($coupon_meta['bsgs_gift_quantity']) ? $coupon_meta['bsgs_gift_quantity'] : null,
                     'type'              => 'number',
                     'custom_attributes' => [
                         'step' 	=> 'any',
@@ -179,7 +175,8 @@ class Bsgs_Coupons_Admin {
 
                     echo("<select id=\"bsgs_gift_product_categories\" name=\"bsgs_gift_product_categories[]\" style=\"width: 50%;\"  class=\"wc-enhanced-select\" multiple=\"multiple\" data-placeholder=\"" . __( 'Any category', 'woocommerce' ) . "\">");
 
-                        $category_ids = isset($coupon_data['bsgs_gift_product_categories']) ? $coupon_data['bsgs_gift_product_categories'] : [];
+
+                        $category_ids = isset($coupon_meta['bsgs_gift_product_categories']) ? $coupon_meta['bsgs_gift_product_categories'] : [];
 
                         $categories   = get_terms( 'product_cat', 'orderby=name&hide_empty=0' );
 
@@ -197,7 +194,7 @@ class Bsgs_Coupons_Admin {
                     echo("<label id=\"bsgs_gift_products_label\" >" . __( 'Products', 'bsgs-coupons' ) . "</label>");
                     echo("<select class=\"wc-product-search\" multiple=\"multiple\" style=\"width: 50%;\" id=\"bsgs_gift_product_ids\" name=\"bsgs_gift_product_ids[]\" data-placeholder=\"" . __( 'Search for a product&hellip;', 'bsgs-coupons' ) . "\" data-action=\"woocommerce_json_search_products_and_variations\">");
 
-                        $product_ids = isset($coupon_data['bsgs_gift_product_ids']) ? $coupon_data['bsgs_gift_product_ids'] : [];
+                        $product_ids = isset($coupon_meta['bsgs_gift_product_ids']) ? $coupon_meta['bsgs_gift_product_ids'] : [];
 
                         foreach( $product_ids as $product_id ) {
                             $product = wc_get_product( $product_id );
@@ -210,42 +207,65 @@ class Bsgs_Coupons_Admin {
                 echo("</p>");
 
             echo("</div>");
+            echo("<div class=\"options_group\">");
+
+
+                woocommerce_wp_checkbox([
+                    'id'          => 'bsgs_once_per_order',
+                    'label'       => __( 'Once per order', 'woocommerce' ),
+                    'description' => __( 'Check this box if the coupon cannot be used more than one time per order.', 'woocommerce' ),
+                    'desc_tip'    => true,
+                    'value'       => wc_bool_to_string(isset($coupon_meta['bsgs_once_per_order']) ? $coupon_meta['bsgs_once_per_order'] : null)
+                ]);
+
+            echo("</div>");
         echo("</div>");
     }
 
 
     public function bsgs_coupon_admin_save_options($coupon_id, $coupon) {
 
+        $coupon = new WC_Coupon( $coupon_id );
+        $coupon_meta = Bsgs_Coupons::get_coupon_meta($coupon);
 
+        $bsgs_gift_product_categories = isset($_POST['bsgs_gift_product_categories']) ? array_filter(array_map('intval', (array) $_POST['bsgs_gift_product_categories'])) : false;
+        $bsgs_gift_product_ids = isset( $_POST['bsgs_gift_product_ids'] ) ? array_filter( array_map( 'intval', (array) $_POST['bsgs_gift_product_ids'])) : false;
 
-
-		$bsgs_gift_product_categories = isset($_POST['bsgs_gift_product_categories']) ? (array) $_POST['bsgs_gift_product_categories'] : [];
-
-
-        if($_POST['bsgs_attribute_taxonomy']) $coupon->update_meta_data( 'bsgs_attribute_taxonomy', absint($_POST['bsgs_attribute_taxonomy']) );
-        if($_POST['bsgs_purchase_quantity']) $coupon->update_meta_data( 'bsgs_purchase_quantity', absint($_POST['bsgs_purchase_quantity']) );
-        if($_POST['bsgs_purchase_product_attribute']) $coupon->update_meta_data( 'bsgs_purchase_product_attribute', absint($_POST['bsgs_purchase_product_attribute']) );
-        if($_POST['bsgs_gift_quantity']) $coupon->update_meta_data( 'bsgs_gift_quantity', absint($_POST['bsgs_gift_quantity']) );
-        if($_POST['bsgs_gift_product_attribute']) $coupon->update_meta_data( 'bsgs_gift_product_attribute', absint($_POST['bsgs_gift_product_attribute']) );
-        if($_POST['bsgs_gift_product_categories']) $coupon->update_meta_data( 'bsgs_gift_product_categories', array_filter(array_map('intval', $bsgs_gift_product_categories)) );
-        if($_POST['bsgs_gift_product_ids']) $coupon->update_meta_data( 'bsgs_gift_product_ids', array_filter(array_map('intval', (array) $_POST['bsgs_gift_product_ids'])) );
-
-
-
-
-
-
-file_put_contents("MKT_TEST.txt", print_r($coupon, true), FILE_APPEND);
-
-
-// print("<pre>");
-// print_r($props);
-// print("</pre>");
-
-
+        if($this->should_meta_update($coupon_meta['bsgs_attribute_taxonomy'], absint($_POST['bsgs_attribute_taxonomy']))) {
+            $coupon->update_meta_data( 'bsgs_attribute_taxonomy', absint($_POST['bsgs_attribute_taxonomy']) );
+        }
+        if($this->should_meta_update($coupon_meta['bsgs_purchase_quantity'], absint($_POST['bsgs_purchase_quantity']))) {
+            $coupon->update_meta_data( 'bsgs_purchase_quantity', absint($_POST['bsgs_purchase_quantity']) );
+        }
+        if($this->should_meta_update($coupon_meta['bsgs_purchase_product_attribute'], absint($_POST['bsgs_purchase_product_attribute']))) {
+            $coupon->update_meta_data( 'bsgs_purchase_product_attribute', absint($_POST['bsgs_purchase_product_attribute']) );
+        }
+        if($this->should_meta_update($coupon_meta['bsgs_gift_quantity'], absint($_POST['bsgs_gift_quantity']))) {
+            $coupon->update_meta_data( 'bsgs_gift_quantity', absint($_POST['bsgs_gift_quantity']) );
+        }
+        if($this->should_meta_update($coupon_meta['bsgs_gift_product_attribute'], absint($_POST['bsgs_gift_product_attribute']))) {    
+            $coupon->update_meta_data( 'bsgs_gift_product_attribute', absint($_POST['bsgs_gift_product_attribute']) );
+        }
+        if($this->should_meta_update($coupon_meta['bsgs_gift_product_categories'], $_POST['bsgs_gift_product_categories'])) {
+            $coupon->update_meta_data( 'bsgs_gift_product_categories', $bsgs_gift_product_categories );
+        }
+        if($this->should_meta_update($coupon_meta['bsgs_gift_product_ids'], $_POST['bsgs_gift_product_ids'])) {
+            $coupon->update_meta_data( 'bsgs_gift_product_ids', $bsgs_gift_product_ids );
+        }
+        if($this->should_meta_update($coupon_meta['bsgs_once_per_order'], sanitize_text_field($_POST['bsgs_once_per_order']))) {    
+            $coupon->update_meta_data( 'bsgs_once_per_order', sanitize_text_field($_POST['bsgs_once_per_order']) );
+        }
 
         $coupon->save();
     }
+
+    public function should_meta_update($current, $new) {
+        if($current == $new) return false;
+        return true;
+
+    }
+
+
 
 
 

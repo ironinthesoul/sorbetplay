@@ -74,4 +74,3 @@ function add_no_sidebar_class( $classes ) {
     return $classes;
 }
 add_filter( 'body_class', 'add_no_sidebar_class' );
-

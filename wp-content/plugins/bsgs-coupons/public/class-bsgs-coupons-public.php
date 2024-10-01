@@ -72,10 +72,7 @@ class Bsgs_Coupons_Public {
 
 	function validate_bsgs_coupon($valid, $coupon) {
 
-$out = "IN\n";
-file_put_contents("ZZZZMKT_TEST.txt", $out, FILE_APPEND);
-
-        $coupon_meta = $this->get_coupon_meta($coupon);
+        $coupon_meta = Bsgs_Coupons::get_coupon_meta($coupon);
 
 		if(
             !$coupon->is_type([$this->coupon_type]) ||
@@ -86,29 +83,113 @@ file_put_contents("ZZZZMKT_TEST.txt", $out, FILE_APPEND);
 		}
 
         $valid_products_in_cart = $this->get_all_valid_products($coupon);
+        $valid_gifts_in_cart = $this->get_all_valid_gifts($coupon);
         $number_of_valid_products = 0;
+        $number_of_valid_products_after_gifts = 0;
+        $number_of_valid_gifts = 0;
+        $unique_gifts = [];
+        $number_of_unique_gifts = 0;
+        $valid_product_quantities = [];
+        $initial_number_of_gifts_allowed = 0;
+        $times_you_get_gifts = 0;
+        // $number_of_gifts_allowed = 0;
 
         foreach($valid_products_in_cart as $valid_product) {
+            $valid_product_quantities[strval($valid_product['variation_id'] ?: $valid_product['product_id'])] = $valid_product['quantity'];
             $number_of_valid_products += $valid_product['quantity'];
         }
+        foreach($valid_gifts_in_cart as $valid_gift) {
+            $number_of_valid_gifts += $valid_gift['quantity'];
+        }
 
-$out = "number_of_valid_products: " . $number_of_valid_products . "\n";
-file_put_contents("MKT_TEST.txt", $out, FILE_APPEND);
+        $initial_number_of_gift_times = floor($number_of_valid_products / $coupon_meta['bsgs_purchase_quantity']);
+        if($coupon_meta['bsgs_once_per_order'] === "yes" && $initial_number_of_gift_times > 1) $initial_number_of_gift_times = 1;
+        $initial_number_of_gifts_allowed = $initial_number_of_gift_times * $coupon_meta['bsgs_gift_quantity'];
 
-        $times_you_get_gifts = floor($number_of_valid_products / $coupon_meta['bsgs_purchase_quantity']);
-        $number_of_free_products_allowed = $times_you_get_gifts * $coupon_meta['bsgs_gift_quantity'];
+        $counter = $initial_number_of_gifts_allowed;
+    
+        $unique_gifts = array_diff_assoc($valid_gifts_in_cart, $valid_products_in_cart);
+   
+        foreach($unique_gifts as $u_gift) {
+            $number_of_unique_gifts += $u_gift['quantity'];
+    
+            $counter -= $u_gift['quantity'];
+            if($counter >= 0) {
+                $counter = 0;
+                break;
+            }
+        }
 
-        if($number_of_valid_products > 1) {
-                $notice = null;
-                $coupon_code_span = "<span class=\"bsgs_coupon_name\">" . $coupon->get_code() . "</span>";
-                $number_of_free_products_in_basket = $number_of_valid_products % $coupon_meta['bsgs_purchase_quantity'];
+// print("<pre>");
+// print_r($common_products_and_gifts);
+// print("</pre>");
+        
 
-                $product_shortfall = $number_of_free_products_allowed - $number_of_free_products_in_basket;
+
+        $counter -= $number_of_unique_gifts;
+
+        if($counter) {
+            foreach($valid_gifts_in_cart as $gift) {
+                if(key_exists(strval($gift['variation_id'] ?: $gift['product_id']), $valid_product_quantities)) {
+                    for($i = 0; $i < $gift['quantity']; $i++) {
+                        $valid_product_quantities[strval($gift['variation_id'] ?: $gift['product_id'])] -= 1;
+                        if(--$counter < 1) break 2;
+                    }
+                }
+            }
+        }
+
+        $number_of_valid_products_after_gifts = array_sum($valid_product_quantities);
+
+        $times_you_get_gifts = floor($number_of_valid_products_after_gifts / $coupon_meta['bsgs_purchase_quantity']);
+
+
+        if($number_of_valid_products > 0) {
+            $notice = null;
+            $coupon_code_span = "<span class=\"bsgs_coupon_name\">" . $coupon->get_code() . "</span>";
+
+
+            // You don't have enough products to qualify
+            if($times_you_get_gifts < 1) {
+
+                $product_shortfall = $coupon_meta['bsgs_purchase_quantity'] - $number_of_valid_products_after_gifts;
                 $product_plural = ($product_shortfall > 1) ? __('products', 'bsgs_coupons') : __('product', 'bsgs_coupons');
+
+                if($product_shortfall > 0) {
+                    $notice = "Add " . $product_shortfall . " more qualifying " . $product_plural . " to qualify for the " . $coupon_code_span . " coupon.";
+                }
+            }
+            else {
+                $product_shortfall = (($coupon_meta['bsgs_purchase_quantity']) * ($times_you_get_gifts + 1)) - $number_of_valid_products_after_gifts;
+                $product_plural = ($product_shortfall > 1) ? __('products', 'bsgs_coupons') : __('product', 'bsgs_coupons');
+                $claimed_gifts = ($coupon_meta['bsgs_gift_quantity'] * $times_you_get_gifts);
+
+
+
+                if($product_shortfall > 0 && $product_shortfall < $coupon_meta['bsgs_purchase_quantity']) {
+                    $notice = "You already have " . $claimed_gifts . " free products. Add " . $product_shortfall . " more qualifying " . $product_plural . " to get " . $coupon_meta['bsgs_gift_quantity'] . " more free.";
+                }
+
+            }
+
+
+            // You have enough qualifying products, but no gift products
+
+
+
+            // You have some qualifying products, but not enough
+
+
+            // You have enough qualifying products but not enough gifts
+
+            
+            
+
+
 
 
             if(
-                $number_of_free_products_allowed > 0 &&
+                $number_of_gifts_allowed > 0 &&
                 $product_shortfall > 0    
             ) {
                 $notice = "Add " . $product_shortfall . " more " . $product_plural . " to qualify for the " . $coupon_code_span . " coupon.";
@@ -119,33 +200,37 @@ file_put_contents("MKT_TEST.txt", $out, FILE_APPEND);
 
         }
 
-$out = "coupon_meta['bsgs_purchase_quantity']: " . $coupon_meta['bsgs_purchase_quantity'] . "\n";
-file_put_contents("MKT_TEST.txt", $out, FILE_APPEND);
 
 
-print("<pre>");
-print_r("Blaahhhh!!!");
-print("</pre>");
 
 
+
+$test_array = [
+        // 'valid_products_in_cart' => $valid_products_in_cart,
+        // 'valid_gifts_in_cart' => $valid_gifts_in_cart,
+        // 'unique_gifts' => $unique_gifts,
+        'number_of_valid_products' => $number_of_valid_products,
+        'number_of_valid_products_after_gifts' => $number_of_valid_products_after_gifts,
+        'number_of_unique_gifts' => $number_of_unique_gifts,
+        'number_of_valid_gifts' =>$number_of_valid_gifts,
+        'valid_product_quantities' => $valid_product_quantities,
+        'times_you_get_gifts' => $times_you_get_gifts,
+        'initial_number_of_gifts_allowed' => $initial_number_of_gifts_allowed,
+];
+
+
+// print("<pre>");
+// print_r($test_array);
+// print("</pre>");
+
+        return true;
         return $number_of_valid_products >= $coupon_meta['bsgs_purchase_quantity'];
 
 	}
 
-    function get_coupon_meta($coupon) {
-		$raw_coupon_data = $coupon->get_meta_data();
-		$coupon_meta = [];
-		foreach($raw_coupon_data as $data) {
-			$coupon_meta[$data->key] = $data->value;
-		}
-        return $coupon_meta;
-
-    }
-
-
     function get_all_valid_products($coupon) {
 
-		$coupon_meta = $this->get_coupon_meta($coupon);
+		$coupon_meta = Bsgs_Coupons::get_coupon_meta($coupon);
 
         $valid_products_in_cart = [];
 
@@ -223,9 +308,57 @@ print("</pre>");
                 }
             }
         }
+        usort($valid_products_in_cart, function($a, $b) {
+            return $a['line_subtotal'] <=> $b['line_subtotal'];
+        });
+
         return $valid_products_in_cart;
     }
 
+    function get_all_valid_gifts($coupon) {
+
+		$coupon_meta = Bsgs_Coupons::get_coupon_meta($coupon);
+        $valid_gifts_in_cart = [];
+        $required_attribute_term = null;
+
+        if($coupon_meta['bsgs_purchase_product_attribute']) {
+            $required_attribute_term = get_term($coupon_meta['bsgs_purchase_product_attribute']);
+        }
+        
+		$cart_items = WC()->cart->get_cart();
+
+		foreach($cart_items as $cart_item) {
+            $product_categories = wp_get_post_terms($cart_item['product_id'], 'product_cat', ["fields" => "ids"]);
+            $key = $cart_item['key'];
+
+
+
+
+
+            // Product gifts
+            if(is_array($coupon_meta['bsgs_gift_product_ids'])) {
+			    if(in_array($cart_item['product_id'], $coupon_meta['bsgs_gift_product_ids'])) {
+                    if($this->possibly_add_product_to_list($valid_gifts_in_cart, $required_attribute_term, $cart_item)) {
+                        $valid_gifts_in_cart[] = $cart_item;
+                    }
+                }
+            }
+
+            // Category gifts
+            if(is_array($coupon_meta['bsgs_gift_product_categories'])) {
+                if(sizeof(array_intersect( $product_categories, $coupon_meta['bsgs_gift_product_categories'])) > 0) { 
+                    if($this->possibly_add_product_to_list($valid_gifts_in_cart, $required_attribute_term, $cart_item)) {
+                        $valid_gifts_in_cart[] = $cart_item;
+                    }
+                }
+            }
+        }
+        usort($valid_gifts_in_cart, function($a, $b) {
+            return $a['line_subtotal'] <=> $b['line_subtotal'];
+        });
+
+        return $valid_gifts_in_cart;
+    }
 
     function possibly_add_product_to_list($valid_products_in_cart, $required_attribute_term, $cart_item) {
         if($required_attribute_term) {
